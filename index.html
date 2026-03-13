@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bali Coworking Spaces Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 40px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            color: #444;
+        }
+        .category-section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bali Coworking Spaces</h1>
+        
+        <div class="category-section">
+            <h2>🌙 Overnight Coworking (24/7)</h2>
+            <div id="overnight-wrapper"></div>
+        </div>
+
+        <div class="category-section">
+            <h2>🌆 Late-night Coworking (closes after 20:00)</h2>
+            <div id="late-night-wrapper"></div>
+        </div>
+
+        <div class="category-section">
+            <h2>☀️ Daytime Coworking (closes at or before 20:00)</h2>
+            <div id="daytime-wrapper"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+    <script>
+        const columns = [
+            { name: 'Name', id: 'name' },
+            { name: 'Area', id: 'area' },
+            { 
+                name: 'Website', 
+                id: 'website',
+                formatter: (cell) => gridjs.html(`<a href="${cell}" target="_blank">Link</a>`)
+            },
+            { name: 'Access', id: 'access_time' },
+            { name: 'Rating', id: 'google_rating' },
+            { name: 'Reviews', id: 'google_reviews' }
+        ];
+
+        const commonConfig = {
+            columns: columns,
+            search: true,
+            sort: true,
+            pagination: false, // Disabled pagination as requested
+            style: {
+                table: { border: '1px solid #ccc' },
+                th: { 'background-color': 'rgba(0, 0, 0, 0.05)', color: '#000', 'text-align': 'left' },
+                td: { 'text-align': 'left' }
+            }
+        };
+
+        async function initDashboard() {
+            const response = await fetch('data.json');
+            const data = await response.json();
+
+            // Render Overnight Table
+            new gridjs.Grid({
+                ...commonConfig,
+                data: data.filter(item => item.category === 'Overnight')
+            }).render(document.getElementById("overnight-wrapper"));
+
+            // Render Late-night Table
+            new gridjs.Grid({
+                ...commonConfig,
+                data: data.filter(item => item.category === 'Late-night')
+            }).render(document.getElementById("late-night-wrapper"));
+
+            // Render Daytime Table
+            new gridjs.Grid({
+                ...commonConfig,
+                data: data.filter(item => item.category === 'Daytime')
+            }).render(document.getElementById("daytime-wrapper"));
+        }
+
+        initDashboard();
+    </script>
+</body>
+</html>
