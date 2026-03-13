@@ -57,23 +57,35 @@
     <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
     <script>
         const columns = [
-            { name: 'Name', id: 'name' },
-            { name: 'Area', id: 'area' },
             { 
-                name: 'Website', 
-                id: 'website',
-                formatter: (cell) => gridjs.html(`<a href="${cell}" target="_blank">Link</a>`)
+                name: 'Name', 
+                id: 'name',
+                formatter: (cell, row) => {
+                    const url = row.cells[1].data;
+                    return gridjs.html(`<a href="${url}" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">${cell}</a>`);
+                }
             },
+            { name: 'Website', id: 'website', hidden: true },
+            { name: 'Area', id: 'area' },
             { name: 'Access', id: 'access_time' },
-            { name: 'Rating', id: 'google_rating' },
-            { name: 'Reviews', id: 'google_reviews' }
+            { 
+                name: 'Google Rating', 
+                id: 'google_rating',
+                formatter: (cell, row) => {
+                    const rating = cell;
+                    const reviews = row.cells[5].data;
+                    if (!rating) return 'Pending...';
+                    return `${rating} ⭐ (${reviews} reviews)`;
+                }
+            },
+            { name: 'Reviews', id: 'google_reviews', hidden: true }
         ];
 
         const commonConfig = {
             columns: columns,
-            search: true,
+            search: false, // Search removed as requested
             sort: true,
-            pagination: false, // Disabled pagination as requested
+            pagination: false,
             style: {
                 table: { border: '1px solid #ccc' },
                 th: { 'background-color': 'rgba(0, 0, 0, 0.05)', color: '#000', 'text-align': 'left' },
