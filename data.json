@@ -5,11 +5,13 @@
     "category": "Overnight",
     "website": "https://bwork.id",
     "pricing_page": "https://bwork.id/membership/canggu/",
-    "access_time": { "value": "24/7", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
+    "access": { "value": "24/7", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
     "google_maps_rating": { "value": 4.3, "accessed_at": "2026-03-14" },
     "google_maps_rating_count": { "value": 316, "accessed_at": "2026-03-14" },
     "google_maps_uri": "https://maps.google.com/?cid=12481520900396072691&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJ6fBvIpg50i0R8764BCFFN60"
+    "google_maps_place_id": "ChIJ6fBvIpg50i0R8764BCFFN60",
+    "notes": null,
+    "visited": false
   },
   {
     "name": "BWork Uluwatu",
@@ -17,11 +19,13 @@
     "category": "Overnight",
     "website": "https://bwork.id",
     "pricing_page": "https://bwork.id/membership/uluwatu/",
-    "access_time": { "value": "24/7", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
+    "access": { "value": "24/7", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Tropical Nomad",
@@ -29,11 +33,13 @@
     "category": "Overnight",
     "website": "https://tropicalnomad.id",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "BukitHub",
@@ -41,11 +47,13 @@
     "category": "Overnight",
     "website": "https://bukithub.com",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Livit Hub",
@@ -53,11 +61,13 @@
     "category": "Overnight",
     "website": "https://livit.co",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Outpost Ubud",
@@ -65,11 +75,13 @@
     "category": "Overnight",
     "website": "https://destinationoutpost.co",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Outpost Canggu",
@@ -77,11 +89,13 @@
     "category": "Overnight",
     "website": "https://destinationoutpost.co",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Biliq Coworking",
@@ -89,11 +103,13 @@
     "category": "Overnight",
     "website": "https://biliq.com",
     "pricing_page": null,
-    "access_time": { "value": "24/7", "source": null, "accessed_at": null },
+    "access": { "value": "24/7", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "ZIN@Work",
@@ -101,11 +117,13 @@
     "category": "Late-night",
     "website": "https://zinwork.com",
     "pricing_page": null,
-    "access_time": { "value": "~06:30--00:00", "source": null, "accessed_at": null },
+    "access": { "value": "~06:30--00:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "G88 Coworking",
@@ -113,11 +131,13 @@
     "category": "Late-night",
     "website": "https://g88coworking.com",
     "pricing_page": null,
-    "access_time": { "value": "~07:00--00:00", "source": null, "accessed_at": null },
+    "access": { "value": "~07:00--00:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Tribal Bali",
@@ -125,11 +145,13 @@
     "category": "Late-night",
     "website": "https://tribalbali.com",
     "pricing_page": null,
-    "access_time": { "value": "~08:00--22:00", "source": null, "accessed_at": null },
+    "access": { "value": "~08:00--22:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Karya Coworking",
@@ -137,11 +159,13 @@
     "category": "Late-night",
     "website": "https://karyacoworking.com",
     "pricing_page": null,
-    "access_time": { "value": "~07:00--22:00", "source": null, "accessed_at": null },
+    "access": { "value": "~07:00--22:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Kinship Studio",
@@ -149,11 +173,13 @@
     "category": "Daytime",
     "website": "https://kinshipstudio.com",
     "pricing_page": null,
-    "access_time": { "value": "~08:00--20:00", "source": null, "accessed_at": null },
+    "access": { "value": "~08:00--20:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Hubud",
@@ -161,11 +187,13 @@
     "category": "Daytime",
     "website": "https://hubud.org",
     "pricing_page": null,
-    "access_time": { "value": "~08:00--20:00", "source": null, "accessed_at": null },
+    "access": { "value": "~08:00--20:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Genesis Creative Centre",
@@ -173,11 +201,13 @@
     "category": "Daytime",
     "website": "https://genesiscreativecentre.com",
     "pricing_page": null,
-    "access_time": { "value": "~09:00--19:00", "source": null, "accessed_at": null },
+    "access": { "value": "~09:00--19:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "Kembali Innovation Hub",
@@ -185,11 +215,13 @@
     "category": "Daytime",
     "website": "https://kembali.co",
     "pricing_page": null,
-    "access_time": { "value": "~09:00--17:00", "source": null, "accessed_at": null },
+    "access": { "value": "~09:00--17:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   },
   {
     "name": "GoWork Park23",
@@ -197,10 +229,12 @@
     "category": "Daytime",
     "website": "https://go-work.com",
     "pricing_page": null,
-    "access_time": { "value": "~09:00--18:00", "source": null, "accessed_at": null },
+    "access": { "value": "~09:00--18:00", "source": null, "accessed_at": null },
     "google_maps_rating": { "value": null, "accessed_at": null },
     "google_maps_rating_count": { "value": null, "accessed_at": null },
     "google_maps_uri": null,
-    "google_maps_place_id": null
+    "google_maps_place_id": null,
+    "notes": null,
+    "visited": false
   }
 ]

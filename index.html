@@ -69,15 +69,20 @@
             { name: 'Area', id: 'area' },
             { 
                 name: 'Access', 
-                id: 'access_time',
+                id: 'access',
                 formatter: (cell) => cell ? cell.value : 'Pending...'
+            },
+            {
+                name: 'Visited',
+                id: 'visited',
+                formatter: (cell) => cell ? '✅' : '❌'
             },
             { 
                 name: 'Google Rating', 
                 id: 'google_maps_rating',
                 formatter: (cell, row) => {
                     const rating = cell ? cell.value : null;
-                    const reviewsObj = row.cells[5].data;
+                    const reviewsObj = row.cells[6].data; // Shifted index due to new column
                     const reviews = reviewsObj ? reviewsObj.value : null;
                     if (!rating) return 'Pending...';
                     return `${rating} ⭐ (${reviews} reviews)`;
