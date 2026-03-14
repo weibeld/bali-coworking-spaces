@@ -67,23 +67,28 @@
             },
             { name: 'Website', id: 'website', hidden: true },
             { name: 'Area', id: 'area' },
-            { name: 'Access', id: 'access_time' },
+            { 
+                name: 'Access', 
+                id: 'access_time',
+                formatter: (cell) => cell ? cell.value : 'Pending...'
+            },
             { 
                 name: 'Google Rating', 
-                id: 'google_rating',
+                id: 'google_maps_rating',
                 formatter: (cell, row) => {
-                    const rating = cell;
-                    const reviews = row.cells[5].data;
+                    const rating = cell ? cell.value : null;
+                    const reviewsObj = row.cells[5].data;
+                    const reviews = reviewsObj ? reviewsObj.value : null;
                     if (!rating) return 'Pending...';
                     return `${rating} ⭐ (${reviews} reviews)`;
                 }
             },
-            { name: 'Reviews', id: 'google_reviews', hidden: true }
+            { name: 'Reviews', id: 'google_maps_rating_count', hidden: true }
         ];
 
         const commonConfig = {
             columns: columns,
-            search: false, // Search removed as requested
+            search: false,
             sort: true,
             pagination: false,
             style: {

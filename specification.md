@@ -1,49 +1,77 @@
 # Bali Coworking Spaces Dataset - Specification
 
-This document defines the requirements, data structure, and research process for the Bali Coworking Spaces dataset, with a focus on late-night and 24/7 access for remote workers.
+The goal of this project is to create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for members working outside of standard business hours (late-night or overnight). The geographic scope covers spaces within ~1–1.5 hours of Denpasar, including Canggu, Pererenan, Seminyak, Kerobokan, Kuta, Sanur, Ubud, and the Bukit Peninsula (Uluwatu/Ungasan).
 
-## 1. Project Goal
-To create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for members working outside of standard business hours (late-night or overnight).
-
-## 2. Geographic Scope
-Coworking spaces within ~1–1.5 hours of Denpasar, including:
-- Canggu, Pererenan, Seminyak, Kerobokan, Kuta, Sanur, Ubud, and the Bukit Peninsula (Uluwatu/Ungasan).
-
-## 3. Classification of Spaces
+## 1. Classification of Spaces
 Spaces are categorized based on **member access hours**:
 
 | Category | Access Definition |
 | :--- | :--- |
 | **Overnight** | 24/7 access for members. |
-| **Late-night** | Access until **later than 20:00**. |
+| **Late-night** | Access until **later than 20:00** (up to 00:00). |
 | **Daytime** | Closes **at or before 20:00**. |
 
 *Note: Access times refer to when members can stay in the space, even if the reception/cafe area closes earlier.*
 
-## 4. Data Structure (`data.json`)
-The master dataset is a JSON array of objects with the following fields:
+## 2. Data Structure (`data.json`)
+The dataset uses objects for researched fields to ensure accountability.
 
-| Field | Description | Source |
+### Field Structures
+- **Researched Fields** (`access_time`):
+  ```json
+  { "value": "...", "source": "...", "accessed_at": "2026-03-13" }
+  ```
+- **API Fields** (`google_maps_rating`, `google_maps_rating_count`):
+  ```json
+  { "value": 0, "accessed_at": "2026-03-13" }
+  ```
+- **Simple Fields** (`name`, `area`, `category`, `website`, `pricing_page`, `google_maps_uri`, `google_maps_place_id`):
+  Standard strings.
+
+### Field Definitions
+| Field | Type | Description |
 | :--- | :--- | :--- |
-| `name` | Name of the space | Official |
-| `area` | Neighborhood/Region | Official |
-| `category` | Overnight, Late-night, or Daytime | Verified |
-| `website` | Official website URL | Official |
-| `pricing_page` | Direct link to membership/pricing | Official |
-| `access_time` | Member access hours (e.g., "24/7", "08:00-22:00") | Official/Verified |
-| `weekend_access` | Access details for Sat/Sun | Official/Verified |
-| `google_rating` | Star rating | Google Places API |
-| `google_reviews` | Number of reviews | Google Places API |
-| `google_maps_uri` | Direct link to Google Maps | Google Places API |
+| `name` | String | Name of the space |
+| `area` | String | Neighborhood/Region |
+| `category` | String | Overnight, Late-night, or Daytime |
+| `website` | String | Official website URL |
+| `pricing_page` | String | Direct link to membership/pricing |
+| `access_time` | Object | value, source, accessed_at |
+| `google_maps_rating` | Object | Star rating (from Places API) |
+| `google_maps_rating_count` | Object | Review count (from Places API) |
+| `google_maps_uri` | String | Direct link (from Places API) |
+| `google_maps_place_id` | String | Unique ID (from Places API) |
 
-## 5. Research & Verification Process
-- **Divide & Conquer:** Research one field or group of fields (e.g., all `access_time` values) at a time.
-- **Member-Centric:** Reported times must be for **weekly/monthly members**, not day-pass users (who often have restricted hours).
-- **Source Priority:** 1. Official Website -> 2. Verified User Reports/Reviews -> 3. Direct Enquiry (if possible).
-- **Google Data:** `google_rating`, `google_reviews`, and `google_maps_uri` must be fetched exclusively via the Google Places API.
-- **Iterative Updates:** Present findings and sources to the user for approval before updating `data.json`.
+## 3. Google Maps API Integration
+We use the **Google Places API (New)** to fetch deterministic data about coworking spaces.
 
-## 6. Presentation Layer
+### Setup Process
+1.  **Project:** Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
+2.  **API:** Enable the [Places API (New)](https://developers.google.com/maps/documentation/places/web-service).
+3.  **Credentials:** Create an API Key in **APIs & Services > Credentials**.
+4.  **Security:** Store the key in a local `.env` file (not committed to source control):
+    ```text
+    GOOGLE_MAPS_API_KEY=your_key_here
+    ```
+
+### Documentation Links
+- [Places API (New) Overview](https://developers.google.com/maps/documentation/places/web-service)
+- [Text Search (New)](https://developers.google.com/maps/documentation/places/web-service/text-search) - Used to resolve Place IDs.
+- [Place Details (New)](https://developers.google.com/maps/documentation/places/web-service/place-details) - Used to fetch ratings and reviews.
+- [Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id) - Deterministic identifiers for locations.
+
+### Alternatives Considered
+For fetching Google Maps data, several alternatives were evaluated:
+- **[Grounding with Google Search](https://developers.google.com/maps/ai/grounding-lite):** A newer AI-driven approach for grounding information with real-world Google Search data. While promising for general information, the deterministic nature of the Places API (New) was preferred for this dataset to ensure exact matches via Place IDs.
+- **Traditional Places API:** Replaced by the "New" version which offers better field masking and more granular control over data billing.
+
+## 4. Research & Verification Process
+- **Divide & Conquer:** Research one field or group of fields at a time.
+- **Member-Centric:** Reported times must be for **weekly/monthly members**.
+- **Source Priority:** 1. Official Website -> 2. Verified User Reports -> 3. Direct Enquiry.
+- **Deterministic Google Data:** Use `google_maps_place_id` for all rating/review updates once resolved.
+
+## 5. Presentation Layer
 - **Source:** `data.json`
 - **Dashboard:** `index.html` (using Grid.js)
-- **Features:** Separate tables per category, sortable columns, and global search. Pagination is disabled for easy scanning.
+- **Features:** Separate tables per category, sortable columns, and global search. Pagination is disabled.
