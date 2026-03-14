@@ -12,7 +12,7 @@
             background-color: #f8f9fa;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: auto;
             background: white;
             padding: 20px;
@@ -72,23 +72,56 @@
                 id: 'access',
                 formatter: (cell) => cell ? cell.value : 'Pending...'
             },
-            {
-                name: 'Visited',
-                id: 'visited',
-                formatter: (cell) => cell ? '✅' : '❌'
-            },
             { 
-                name: 'Google Rating', 
+                name: 'Rating', 
                 id: 'google_maps_rating',
+                sort: {
+                    compare: (a, b) => {
+                        const valA = (a && typeof a.value === 'number') ? a.value : 0;
+                        const valB = (b && typeof b.value === 'number') ? b.value : 0;
+                        if (valA > valB) return 1;
+                        if (valA < valB) return -1;
+                        return 0;
+                    }
+                },
                 formatter: (cell, row) => {
-                    const rating = cell ? cell.value : null;
-                    const reviewsObj = row.cells[6].data; // Shifted index due to new column
-                    const reviews = reviewsObj ? reviewsObj.value : null;
-                    if (!rating) return 'Pending...';
-                    return `${rating} ⭐ (${reviews} reviews)`;
+                    const rating = cell && cell.value !== null ? cell.value : '-';
+                    const uri = row.cells[8].data;
+                    if (rating === '-') return '-';
+                    return gridjs.html(`<a href="${uri}" target="_blank" style="color: #007bff; text-decoration: none;">${rating}</a>`);
                 }
             },
-            { name: 'Reviews', id: 'google_maps_rating_count', hidden: true }
+            { 
+                name: 'Reviews', 
+                id: 'google_maps_rating_count',
+                sort: {
+                    compare: (a, b) => {
+                        const valA = (a && typeof a.value === 'number') ? a.value : 0;
+                        const valB = (b && typeof b.value === 'number') ? b.value : 0;
+                        if (valA > valB) return 1;
+                        if (valA < valB) return -1;
+                        return 0;
+                    }
+                },
+                formatter: (cell, row) => {
+                    const reviews = cell && cell.value !== null ? cell.value : '-';
+                    const uri = row.cells[8].data;
+                    if (reviews === '-') return '-';
+                    return gridjs.html(`<a href="${uri}" target="_blank" style="color: #007bff; text-decoration: none;">${reviews}</a>`);
+                }
+            },
+            {
+                name: 'Coordinates',
+                id: 'google_maps_latitude',
+                formatter: (cell, row) => {
+                    const lat = cell;
+                    const lng = row.cells[7].data;
+                    if (lat === null || lng === null) return '-';
+                    return `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+                }
+            },
+            { name: 'Longitude', id: 'google_maps_longitude', hidden: true },
+            { name: 'Maps URI', id: 'google_maps_uri', hidden: true }
         ];
 
         const commonConfig = {
