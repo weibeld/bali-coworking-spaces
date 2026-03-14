@@ -29,6 +29,8 @@ The dataset uses objects for researched fields to ensure accountability.
 | `google_maps_rating_count` | Object | Review count (from Places API) |
 | `google_maps_uri` | String | Direct link (from Places API) |
 | `google_maps_place_id` | String | Unique ID (from Places API) |
+| `google_maps_latitude` | Number | Latitude (from Places API) |
+| `google_maps_longitude` | Number | Longitude (from Places API) |
 | `notes` | String | Optional personal notes/experience |
 | `visited` | Boolean | Whether I have visited the space (default: false) |
 
@@ -59,7 +61,7 @@ We use the **Google Places API (New)** to fetch deterministic data about coworki
 ### Documentation Links
 - [Places API (New) Overview](https://developers.google.com/maps/documentation/places/web-service)
 - [Text Search (New)](https://developers.google.com/maps/documentation/places/web-service/text-search) - Used to resolve Place IDs.
-- [Place Details (New)](https://developers.google.com/maps/documentation/places/web-service/place-details) - Used to fetch ratings and reviews.
+- [Place Details (New)](https://developers.google.com/maps/documentation/places/web-service/place-details) - Used to fetch ratings, reviews, and coordinates.
 - [Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id) - Deterministic identifiers for locations.
 
 ### Alternative Considered: Grounding Lite
@@ -71,7 +73,9 @@ While Grounding Lite is a powerful tool for AI-driven research and contextual su
 - **Divide & Conquer:** Research one field or group of fields at a time.
 - **Member-Centric:** Reported times must be for **weekly/monthly members**.
 - **Source Priority:** 1. Official Website -> 2. Verified User Reports -> 3. Direct Enquiry.
-- **Deterministic Google Data:** Use `google_maps_place_id` for all rating/review updates once resolved.
+- **Google Data Tasks:** Google Maps research is split into two deterministic tasks:
+    1. **Resolve Place ID:** Find and save the `google_maps_place_id`.
+    2. **Fetch Info Bundle:** Fetch `rating`, `rating_count`, `uri`, `latitude`, and `longitude` in a single operation once the ID is known.
 
 ## 5. Presentation Layer
 - **Source:** `data.json`
