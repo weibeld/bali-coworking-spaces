@@ -2,7 +2,6 @@
 
 ## TODO
 - G88 Coworking (Kerobokan): no website, doesn't exist anymore?
-- [TRIBAL Coworking Bali](https://tribalbali.com): coworking hostel, is it open to the public too?
 - [Karya Coworking](https://karyacoworking.com): temporarily closed, seems to have been a 24/7 space, check for reopening
 
 ## Closed / Removed Spaces

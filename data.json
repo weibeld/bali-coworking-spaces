@@ -46,7 +46,7 @@
   },
   {
     "name": "BukitHub",
-    "area": "Ungasan",
+    "area": "Uluwatu",
     "website": "https://bukithub.com",
     "pricing_page": "https://www.bukithub.com/",
     "access": { "start": "00:00", "end": "00:00", "source": "https://www.bukithub.com/", "accessed_at": "2026-03-14" },
@@ -135,6 +135,21 @@
     "visited": false
   },
   {
+    "name": "TRIBAL Coworking Bali",
+    "area": "Canggu",
+    "website": "https://tribalbali.com",
+    "pricing_page": "N/A",
+    "access": { "start": "08:00", "end": "22:00", "source": "In-person visit", "accessed_at": "2026-03-15" },
+    "google_maps_rating": { "value": 4.6, "accessed_at": "2026-03-15" },
+    "google_maps_rating_count": { "value": 628, "accessed_at": "2026-03-15" },
+    "google_maps_uri": "https://maps.google.com/?cid=9760897728039595040&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+    "google_maps_place_id": "ChIJH4qy2jI50i0RIKy3qMSsdYc",
+    "google_maps_latitude": -8.6487351,
+    "google_maps_longitude": 115.12475049999998,
+    "notes": "Day pass: 100k. Alternatively, free use with minimum spend in cafe: 100k for 3 hours, 200k for 6 hours.",
+    "visited": true
+  },
+  {
     "name": "ZIN Cafe Canggu",
     "area": "Canggu",
     "website": "https://zin.world/zin-cafe/",
@@ -154,7 +169,7 @@
     "area": "Kuta",
     "website": "https://www.instagram.com/tjscoffeeandcoworking/",
     "pricing_page": "N/A",
-    "access": { "start": "07:00", "end": "21:00", "source": "https://maps.app.goo.gl/a42dG83mHQU6swvRA", "accessed_at": "2026-03-14" },
+    "access": { "start": "07:00", "end": "21:00", "source": "In-person visit", "accessed_at": "2026-03-13" },
     "google_maps_rating": { "value": 4.3, "accessed_at": "2026-03-14" },
     "google_maps_rating_count": { "value": 141, "accessed_at": "2026-03-14" },
     "google_maps_uri": "https://maps.google.com/?cid=14305236145587339437&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",

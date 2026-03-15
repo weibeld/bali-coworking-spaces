@@ -1,6 +1,6 @@
 # Bali Coworking Spaces Dataset - Specification
 
-The goal of this project is to create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for remote workers. The geographic scope covers spaces within ~1–1.5 hours of Denpasar, including Canggu, Pererenan, Seminyak, Kerobokan, Kuta, Sanur, Ubud, and the Bukit Peninsula (Uluwatu/Ungasan).
+The goal of this project is to create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for remote workers. The geographic scope covers the major hubs within ~1–1.5 hours of Denpasar.
 
 ## 1. Data Structure (`data.json`)
 The dataset uses objects for researched fields to ensure accountability.
@@ -9,7 +9,7 @@ The dataset uses objects for researched fields to ensure accountability.
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `name` | String | Name of the space |
-| `area` | String | Neighborhood/Region |
+| `area` | String | Consolidated Hub name |
 | `website` | String | Official website URL |
 | `pricing_page` | String | Direct link to membership/pricing |
 | `access` | Object | start, end, source, accessed_at |
@@ -48,30 +48,37 @@ We use the **Google Places API (New)** to fetch deterministic data about coworki
 1.  **Project:** Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
 2.  **API:** Enable the [Places API (New)](https://developers.google.com/maps/documentation/places/web-service).
 3.  **Credentials:** Create an API Key in **APIs & Services > Credentials**.
-4.  **Security:** Store the key in a local `.env` file (not committed to source control):
-    ```text
-    GOOGLE_MAPS_API_KEY=your_key_here
-    ```
+4.  **Security:** Store the key in a local `.env` file (not committed to source control).
 
 ### Documentation Links
 - [Places API (New) Overview](https://developers.google.com/maps/documentation/places/web-service)
-- [Text Search (New)](https://developers.google.com/maps/documentation/places/web-service/text-search) - Used to resolve Place IDs.
-- [Place Details (New)](https://developers.google.com/maps/documentation/places/web-service/place-details) - Used to fetch ratings, reviews, and coordinates.
-- [Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id) - Deterministic identifiers for locations.
+- [Text Search (New)](https://developers.google.com/maps/documentation/places/web-service/text-search)
+- [Place Details (New)](https://developers.google.com/maps/documentation/places/web-service/place-details)
+- [Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id)
 
 ### Alternative Considered: Grounding Lite
-[Grounding Lite](https://developers.google.com/maps/ai/grounding-lite) is an experimental service from Google Maps Platform that uses the **Model Context Protocol (MCP)** to provide AI agents and applications with real-time geospatial data. As an MCP server, it allows LLMs to "ground" their responses in accurate information by providing tools like `search_places` and `lookup_weather` that can be called autonomously by the model. 
-
-While Grounding Lite is a powerful tool for AI-driven research and contextual summaries, it was not chosen for this project because our goal is to build a structured, deterministic dataset. The **Places API (New)** provides more direct access to raw, un-synthesized metrics (such as exact review counts and persistent Place IDs) which are essential for the "Divide & Conquer" research process and for maintaining long-term data integrity without LLM intervention.
+[Grounding Lite](https://developers.google.com/maps/ai/grounding-lite) is an experimental service using the **Model Context Protocol (MCP)**. It was not chosen because the Places API provides more deterministic, structured metrics essential for maintaining long-term data integrity.
 
 ## 3. Research & Verification Process
 - **Divide & Conquer:** Research one field or group of fields at a time.
 - **Member-Centric:** Reported times must be for **weekly/monthly members**.
-- **Source Priority:** 1. Official Website -> 2. Verified User Reports -> 3. Direct Enquiry.
-- **Automated Updates:** For Google Maps data (Place ID and Info Bundle), the agent performs the fetch and immediately initiates a file update. The standard CLI file-write confirmation serves as the verification step.
-- **Manual Verification:** For qualitative fields (like `access`), the agent presents findings and sources before updating the dataset.
+- **Source Priority:** 1. Official Website -> 2. In-person visit -> 3. Direct Enquiry -> 4. Verified User Reports.
+- **Automated Updates:** Google Maps data fetches immediately initiate a file update. The standard CLI file-write confirmation serves as the verification step.
+- **Manual Verification:** For qualitative fields (like `access`), findings and sources are presented before updating the dataset.
 
-## 4. Presentation Layer
+## 4. Geographic Hub Consolidation
+To maintain a clean and searchable dataset, smaller neighborhoods are consolidated into primary "Hubs."
+
+| Hub | Included Areas |
+| :--- | :--- |
+| **Canggu** | Canggu, Pererenan, Berawa (Tibubeneng), Seseh. |
+| **Seminyak** | Seminyak, Kerobokan, Umalas. |
+| **Kuta** | Kuta, Legian, Tuban. |
+| **Uluwatu** | Uluwatu, Ungasan, Pecatu, Bingin, Jimbaran. |
+| **Ubud** | Central Ubud, Nyuh Kuning, Penestanan, Sayan. |
+| **Sanur** | Sanur, Renon. |
+
+## 5. Presentation Layer
 - **Source:** `data.json`
 - **Dashboard:** `index.html` (using Grid.js)
-- **Features:** A single unified table containing all verified coworking spaces, with sortable columns and global search. Pagination is disabled.
+- **Features:** A single unified table with sortable columns and global search. Pagination is disabled.
