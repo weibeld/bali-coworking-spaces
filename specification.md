@@ -73,9 +73,8 @@ While Grounding Lite is a powerful tool for AI-driven research and contextual su
 - **Divide & Conquer:** Research one field or group of fields at a time.
 - **Member-Centric:** Reported times must be for **weekly/monthly members**.
 - **Source Priority:** 1. Official Website -> 2. Verified User Reports -> 3. Direct Enquiry.
-- **Google Data Tasks:** Google Maps research is split into two deterministic tasks:
-    1. **Resolve Place ID:** Find and save the `google_maps_place_id`.
-    2. **Fetch Info Bundle:** Fetch `rating`, `rating_count`, `uri`, `latitude`, and `longitude` in a single operation once the ID is known.
+- **Automated Updates:** For Google Maps data (Place ID and Info Bundle), the agent performs the fetch and immediately initiates a file update. The standard CLI file-write confirmation serves as the verification step.
+- **Manual Verification:** For qualitative fields (like `access`), the agent presents findings and sources before updating the dataset.
 
 ## 5. Presentation Layer
 - **Source:** `data.json`

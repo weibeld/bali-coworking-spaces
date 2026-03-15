@@ -10,14 +10,25 @@ fi
 
 # 1. Total Stats
 TOTAL_SPACES=$(jq '. | length' "$DATA_FILE")
-MISSING_FIELDS=$(jq '[.[] | to_entries[].value | select(. == null or (.value? == null) or (.source? == null and .value? != null))] | length' "$DATA_FILE")
+
+# Count only required fields that are null or missing values in objects
+# Excludes 'notes' and 'visited' which are allowed to be null
+MISSING_FIELDS=$(jq '[.[] | to_entries[] | 
+  select(.key != "notes" and .key != "visited") | 
+  .value as $v |
+  select(
+    ($v == null) or 
+    ($v | type == "object" and $v.value == null and $v != "N/A") or 
+    ($v | type == "object" and has("source") and $v.source == null and $v.value != null)
+  )
+] | length' "$DATA_FILE")
 
 echo "📊 PROGRESS REPORT"
 echo "-----------------"
 echo "Spaces: $TOTAL_SPACES | Missing Fields: $MISSING_FIELDS"
 echo ""
 
-# 2. Find the first space with a null field
+# 2. Find the first space with a null required field
 NEXT_TASK=$(jq -r '
   .[] | 
   select(
@@ -25,11 +36,11 @@ NEXT_TASK=$(jq -r '
     (.access.source == null) or
     (.pricing_page == null) or 
     (.google_maps_place_id == null) or 
-    (.google_maps_rating.value == null) or 
-    (.google_maps_rating_count.value == null) or 
-    (.google_maps_uri == null) or
-    (.google_maps_latitude == null) or
-    (.google_maps_longitude == null)
+    (.google_maps_rating.value == null and .google_maps_rating != "N/A") or 
+    (.google_maps_rating_count.value == null and .google_maps_rating_count != "N/A") or 
+    (.google_maps_uri == null and .google_maps_uri != "N/A") or
+    (.google_maps_latitude == null and .google_maps_latitude != "N/A") or
+    (.google_maps_longitude == null and .google_maps_longitude != "N/A")
   ) | 
   {
     name: .name,
