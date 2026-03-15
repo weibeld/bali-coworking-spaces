@@ -1,19 +1,8 @@
 # Bali Coworking Spaces Dataset - Specification
 
-The goal of this project is to create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for members working outside of standard business hours (late-night or overnight). The geographic scope covers spaces within ~1–1.5 hours of Denpasar, including Canggu, Pererenan, Seminyak, Kerobokan, Kuta, Sanur, Ubud, and the Bukit Peninsula (Uluwatu/Ungasan).
+The goal of this project is to create a verified, searchable dataset of coworking spaces in Bali, specifically identifying those suitable for remote workers. The geographic scope covers spaces within ~1–1.5 hours of Denpasar, including Canggu, Pererenan, Seminyak, Kerobokan, Kuta, Sanur, Ubud, and the Bukit Peninsula (Uluwatu/Ungasan).
 
-## 1. Classification of Spaces
-Spaces are categorized based on **member access hours**:
-
-| Category | Access Definition |
-| :--- | :--- |
-| **Overnight** | 24/7 access. |
-| **Late-night** | Access until **later than 20:00**. |
-| **Daytime** | Access **until or before 20:00**. |
-
-*Note: Access times refer to when members can stay in the space, even if the reception/cafe area closes earlier.*
-
-## 2. Data Structure (`data.json`)
+## 1. Data Structure (`data.json`)
 The dataset uses objects for researched fields to ensure accountability.
 
 ### Field Definitions
@@ -21,10 +10,9 @@ The dataset uses objects for researched fields to ensure accountability.
 | :--- | :--- | :--- |
 | `name` | String | Name of the space |
 | `area` | String | Neighborhood/Region |
-| `category` | String | Overnight, Late-night, or Daytime |
 | `website` | String | Official website URL |
 | `pricing_page` | String | Direct link to membership/pricing |
-| `access` | Object | value, source, accessed_at |
+| `access` | Object | start, end, source, accessed_at |
 | `google_maps_rating` | Object | Star rating (from Places API) |
 | `google_maps_rating_count` | Object | Review count (from Places API) |
 | `google_maps_uri` | String | Direct link (from Places API) |
@@ -37,16 +25,23 @@ The dataset uses objects for researched fields to ensure accountability.
 ### Object Field Structures
 Fields that are defined as Objects use the following structures to track verification metadata:
 
-- **Researched Fields** (e.g., `access`):
+- **Researched Fields** (`access`):
   ```json
-  { "value": "...", "source": "...", "accessed_at": "2026-03-13" }
+  { 
+    "start": "HH:mm", 
+    "end": "HH:mm", 
+    "source": "...", 
+    "accessed_at": "2026-03-13" 
+  }
   ```
+  *Note: 24/7 access is represented as `"start": "00:00", "end": "00:00"`.*
+
 - **API-Driven Fields** (e.g., `google_maps_rating`):
   ```json
   { "value": 0, "accessed_at": "2026-03-13" }
   ```
 
-## 3. Google Maps API Integration
+## 2. Google Maps API Integration
 We use the **Google Places API (New)** to fetch deterministic data about coworking spaces.
 
 ### Setup Process
@@ -69,14 +64,14 @@ We use the **Google Places API (New)** to fetch deterministic data about coworki
 
 While Grounding Lite is a powerful tool for AI-driven research and contextual summaries, it was not chosen for this project because our goal is to build a structured, deterministic dataset. The **Places API (New)** provides more direct access to raw, un-synthesized metrics (such as exact review counts and persistent Place IDs) which are essential for the "Divide & Conquer" research process and for maintaining long-term data integrity without LLM intervention.
 
-## 4. Research & Verification Process
+## 3. Research & Verification Process
 - **Divide & Conquer:** Research one field or group of fields at a time.
 - **Member-Centric:** Reported times must be for **weekly/monthly members**.
 - **Source Priority:** 1. Official Website -> 2. Verified User Reports -> 3. Direct Enquiry.
 - **Automated Updates:** For Google Maps data (Place ID and Info Bundle), the agent performs the fetch and immediately initiates a file update. The standard CLI file-write confirmation serves as the verification step.
 - **Manual Verification:** For qualitative fields (like `access`), the agent presents findings and sources before updating the dataset.
 
-## 5. Presentation Layer
+## 4. Presentation Layer
 - **Source:** `data.json`
 - **Dashboard:** `index.html` (using Grid.js)
-- **Features:** Separate tables per category, sortable columns, and global search. Pagination is disabled.
+- **Features:** A single unified table containing all verified coworking spaces, with sortable columns and global search. Pagination is disabled.

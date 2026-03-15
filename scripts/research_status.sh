@@ -12,14 +12,14 @@ fi
 TOTAL_SPACES=$(jq '. | length' "$DATA_FILE")
 
 # Count only required fields that are null or missing values in objects
-# Excludes 'notes' and 'visited' which are allowed to be null
 MISSING_FIELDS=$(jq '[.[] | to_entries[] | 
   select(.key != "notes" and .key != "visited") | 
   .value as $v |
   select(
     ($v == null) or 
-    ($v | type == "object" and $v.value == null and $v != "N/A") or 
-    ($v | type == "object" and has("source") and $v.source == null and $v.value != null)
+    ($v | type == "object" and has("value") and $v.value == null and $v != "N/A") or 
+    ($v | type == "object" and has("start") and ($v.start == null or $v.end == null)) or
+    ($v | type == "object" and has("source") and $v.source == null)
   )
 ] | length' "$DATA_FILE")
 
@@ -32,7 +32,8 @@ echo ""
 NEXT_TASK=$(jq -r '
   .[] | 
   select(
-    (.access.value == null) or 
+    (.access.start == null) or 
+    (.access.end == null) or
     (.access.source == null) or
     (.pricing_page == null) or 
     (.google_maps_place_id == null) or 
@@ -45,7 +46,7 @@ NEXT_TASK=$(jq -r '
   {
     name: .name,
     field: (
-      if .access.value == null then "access_value"
+      if .access.start == null or .access.end == null then "access_times"
       elif .access.source == null then "access_source"
       elif .pricing_page == null then "pricing_page"
       elif .google_maps_place_id == null then "google_maps_place_id"
