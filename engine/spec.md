@@ -50,3 +50,36 @@ Discovery must be grounded in a "Source of Truth" to avoid LLM hallucinations. T
 - **Source Selection:** How does the Engine guide the user to a grounded index (e.g., Google Books API, GitHub, arXiv)? 
 - **Query Translation:** How does the Engine translate a fuzzy user intent ("General Kubernetes books") into a precise search query for that source (`intitle:Kubernetes`)?
 - **Filtering vs. Generation:** The Engine must strictly **filter** results returned by the source rather than **generating** new ones from the LLM's internal weights.
+
+---
+
+## 4. Implementation Details (Proof of Concept)
+
+### A. Technology Stack
+- **Language:** Python 3.10+
+- **LLM SDK:** [Google GenAI SDK for Python](https://pypi.org/project/google-genai/) ([GitHub](https://github.com/googleapis/python-genai), [Docs](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/sdks/overview))
+- **Orchestration:** Custom Python script using `Pydantic` for schema validation and `PyYAML` for configuration management.
+
+### B. LLM Backend
+- **Provider:** Google Gemini
+- **Model:** `gemini-flash-latest` (or latest available via AI Studio)
+- **Interface:** AI Studio (Gemini Developer API) for simplified PoC access.
+
+---
+
+## 5. Setup Requirements
+
+### A. Gemini API Key
+1.  Generate an API Key at [Google AI Studio (API Keys)](https://aistudio.google.com/app/apikey).
+2.  Store the key in a local environment file at `engine/.env`:
+    ```env
+    GEMINI_API_KEY=your_api_key_here
+    ```
+
+### B. Python Environment
+1.  Create a virtual environment: `python3 -m venv engine/.venv`
+2.  Activate and install dependencies:
+    ```bash
+    source engine/.venv/bin/activate
+    pip install google-genai PyYAML pydantic httpx python-dotenv
+    ```
