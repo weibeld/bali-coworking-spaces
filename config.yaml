@@ -50,6 +50,12 @@ discovery:
 # ==========================================
 # For any field not listed here, the Engine will use "Best Guess" (LLM Reasoning)
 # to extract the data from available sources.
+#
+# Methodology:
+# - Source Priority: 1. Official Website -> 2. In-person visit -> 3. Direct Enquiry -> 4. Verified User Reports.
+# - 24/7 Access Format: Represented as "start": "00:00", "end": "00:00".
+# - Accuracy: Reported times must be for weekly/monthly members.
+#
 enrichment:
   field_instructions:
     # Logic-bound field with specific mapping rules
