@@ -1,0 +1,94 @@
+# Datapilot Engine Configuration: Bali Coworking Spaces
+
+# ==========================================
+# 1. THE GOAL: Target Data Structure
+# ==========================================
+# Defines the final contract. Every record must eventually satisfy this.
+target_schema:
+  fields:
+    name: { type: "string" }
+    area: { type: "string" }
+    website: { type: "string" }
+    pricing_page: { type: "string" }
+    access:
+      type: "object"
+      properties:
+        start: { type: "string" }
+        end: { type: "string" }
+        source: { type: "string" }
+        accessed_at: { type: "string", format: "date" }
+    google_maps_rating:
+      type: "object"
+      properties:
+        value: { type: "number" }
+        accessed_at: { type: "string", format: "date" }
+    google_maps_rating_count:
+      type: "object"
+      properties:
+        value: { type: "integer" }
+        accessed_at: { type: "string", format: "date" }
+    google_maps_uri: { type: "string" }
+    google_maps_place_id: { type: "string" }
+    google_maps_latitude: { type: "number" }
+    google_maps_longitude: { type: "number" }
+    notes: { type: "string" }
+    visited: { type: "boolean" }
+
+# ==========================================
+# 2. DISCOVERY: The Entry Point
+# ==========================================
+# Where the Engine starts looking for entities.
+discovery:
+  primary_source: "Google Maps"
+  intent: >
+    Find all 'coworking spaces' within 40km of Bali's international airport (DPS). 
+    Exclude normal cafes; focus on dedicated coworking facilities with at 
+    least 20 reviews.
+
+# ==========================================
+# 3. ENRICHMENT: Filling the Schema
+# ==========================================
+# For any field not listed here, the Engine will use "Best Guess" (LLM Reasoning)
+# to extract the data from available sources.
+enrichment:
+  field_instructions:
+    # Logic-bound field with specific mapping rules
+    area:
+      source: "Google Maps Location / Web"
+      instruction: >
+        Determine the local area and consolidate into one of these primary hubs:
+        - Canggu: (includes Pererenan, Berawa, Seseh)
+        - Seminyak: (includes Kerobokan, Umalas)
+        - Kuta: (includes Legian, Tuban)
+        - Uluwatu: (includes Ungasan, Pecatu, Bingin, Jimbaran)
+        - Ubud: (includes Central Ubud, Nyuh Kuning, Penestanan, Sayan)
+        - Sanur: (includes Renon)
+    
+    # Explicitly bound for accuracy
+    google_maps_place_id:
+      source: "Google Places API"
+      instruction: "Extract the unique ID for the entity."
+    
+    google_maps_rating:
+      source: "Google Places API"
+      instruction: "Current rating value and fetch date."
+
+    # Strategic AI instructions for high-priority fields
+    pricing_page:
+      source: "Official Website"
+      instruction: "Find the direct URL for membership or day pass pricing."
+
+    access:
+      source: "Official Website or Social Media"
+      instruction: >
+        Extract member-specific 'Open' and 'Close' hours. Note if 24/7 
+        access is available for members.
+
+    # User-controlled fields
+    notes: 
+      source: "User Input"
+      instruction: "Keep as provided by the user."
+    
+    visited:
+      source: "User Input"
+      instruction: "Default to false; update based on user confirmation."

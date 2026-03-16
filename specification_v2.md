@@ -1,89 +1,52 @@
-# Bali Coworking Spaces - Specification (v2)
+# Datapilot Engine Specification (v2)
 
-This specification defines a two-phase data pipeline—**Discovery** and **Enrichment**—aligned with the Datapilot architecture. It prioritises source fidelity, deterministic routing for structured data, and human-in-the-loop verification.
-
----
-
-## 1. Pipeline Overview
-
-The project operates as a sequential pipeline:
-**[Sources]** $\rightarrow$ **[Discovery Phase]** $\rightarrow$ **(discovery_candidates.json)** $\rightarrow$ **[Enrichment Phase]** $\rightarrow$ **(data.json)**
+This document defines the "Engine" architecture for a goal-oriented, schema-driven data extraction system. It aims to achieve the most efficient data extraction by combining deterministic tools (APIs) and non-deterministic tools (LLMs) in a unified interface.
 
 ---
 
-## 2. Phase 1: Discovery (Identification & Characterisation)
+## 1. Core Concepts
 
-The goal of this phase is to mine a primary source to identify potential entities and characterise them to determine if they meet the project criteria.
+### A. Goal-Oriented & Schema-Driven
+The target data structure is the primary "Goal" of the system. The user defines what the final data should look like (`target_schema`), and the Engine's purpose is to populate this schema.
 
-### A. Harvesting (Deterministic)
-- **Source:** Google Places API (New).
-- **Procedure:** Bulk search for "coworking space" within a 40km radius of DPS Airport (-8.7481, 115.1671), restricted to the main island of Bali.
-- **Filter:** Minimum 20 reviews.
-- **Internal Output:** Raw list of Place IDs, Names, Google Category Labels, Top 5 Reviews, and Website URLs. (User does not interact with this raw state).
+### C. Field Specification Spectrum
+"As efficient as possible, as accurate as necessary." Field extraction is defined on a spectrum:
+- **Deterministic:** Specific API calls or rules where accuracy is paramount.
+- **Fuzzy:** LLM-driven reasoning/instructions where the tool's flexibility is the most efficient choice.
 
-### B. Analysis & Reasoning (AI-Driven)
-For each harvested listing, the AI agent performs a human-like analysis:
-1.  **Source Triangulation:** Cross-reference Google Labels, Review Content (what are people actually doing there?), and the Official Website.
-2.  **Reasoning:** Determine if the space provides **intended explicit coworking services** (e.g., selling day passes/memberships) rather than just "side-effect" laptop friendliness.
-3.  **Characterisation:** Assign a tentative **Type of Place** (e.g., "Dedicated Coworking", "Hybrid Cafe/Coworking", "Normal Cafe").
+### D. Iterative Refinement & State Preservation
+Usage follows an exploratory loop. A user may start with "fuzzy" specifications to test the waters and then "narrow down" to deterministic rules as needed. The Engine must preserve previously extracted data during these refinement passes, allowing for incremental improvements without starting from scratch.
 
-### C. Discovery Verification (Human-in-the-loop)
-- **Output:** `discovery_candidates.json`.
-- **User Action:** Review the AI characterisation and evidence. The user approves or rejects candidates. Only approved candidates proceed to Phase 2.
+### E. Unified Hybrid Interface
+The Engine's main value proposition is providing a single interface that blends traditional data tools (scripts, APIs) with AI capabilities, selecting the most efficient sub-tool for each specific field-extraction task.
 
 ---
 
-## 3. Phase 2: Enrichment (Completing the Profile)
+## 2. Input Configuration (`config.yaml`)
 
-The goal of this phase is to build a full profile for approved candidates by pulling distributed data from secondary sources.
-
-### A. Research & Extraction (Deterministic & AI-Driven)
-For each sanctioned candidate, the agent performs a hybrid research task:
-1.  **Source Access (Deterministic):** Accesses specific information sources (e.g., official websites, social media profiles).
-2.  **Analysis & Extraction (AI-Driven):** The AI analyses the content of these sources to decide on the data values to extract (e.g., interpreting complex pricing structures or identifying member-only access hours).
-
-**Targeted Fields:**
-- **Access Times:** Find exact member "Open" and "Close" hours.
-- **Pricing:** Locate the direct pricing/membership URL.
-
-### B. Enrichment Verification (Human-in-the-loop)
-- **User Action:** Verify the findings and sources presented by the agent. The user also provides subjective data (notes and visit status) at this stage.
-- **Final Output:** The record is moved to the master `data.json`.
+The Engine is governed by a declarative configuration file:
+- **Target Schema:** The "What" (Goal).
+- **Discovery Intent:** The "Where" (Source + Goal-based criteria).
+- **Enrichment Strategy:** The "How" (Field-by-field instructions, ranging from API bindings to LLM directives).
 
 ---
 
-## 4. Data Structure (`data.json`)
+## 3. Open Design Decisions
 
-| Field | Type | Description | Source Binding |
-| :--- | :--- | :--- | :--- |
-| `name` | String | Name of the space | Google API |
-| `area` | String | Consolidated Hub name | Mapping Rule |
-| `website` | String | Official website URL | Google API / Web |
-| `pricing_page` | String | Direct link to membership/pricing | Web Search |
-| `access` | Object | start, end, source, accessed_at | Web / In-person |
-| `google_maps_rating` | Object | value, accessed_at | Google API |
-| `google_maps_rating_count` | Object | value, accessed_at | Google API |
-| `google_maps_uri` | String | Direct link to Maps | Google API |
-| `google_maps_place_id` | String | Unique ID | Google API |
-| `google_maps_latitude` | Number | Latitude | Google API |
-| `google_maps_longitude` | Number | Longitude | Google API |
-| `notes` | String | User-provided personal notes | User |
-| `visited` | Boolean | User-provided visit status | User |
+### A. Role of the LLM vs. Orchestrator
+Is the main program a "Traditional Orchestrator" that explicitly calls the LLM for fuzzy fields, or is it an "Agentic Loop" where the LLM drives the overall flow?
 
----
+### B. LLM Mapping for Deterministic APIs
+Even for deterministic API calls, should the LLM be used to "map" the raw API response to the schema? This would reduce the user's burden of studying API documentation and specifying exact JSON paths (e.g., "Extract the rating from this Google API response").
 
-## 5. Geographic Hub Consolidation
-Areas are consolidated into primary hubs to maintain searchability:
-- **Canggu:** Canggu, Pererenan, Berawa, Seseh.
-- **Seminyak:** Seminyak, Kerobokan, Umalas.
-- **Kuta:** Kuta, Legian, Tuban.
-- **Uluwatu:** Uluwatu, Ungasan, Pecatu, Bingin, Jimbaran.
-- **Ubud:** Central Ubud, Nyuh Kuning, Penestanan, Sayan.
-- **Sanur:** Sanur, Renon.
+### C. State Preservation Logic During Refinement Passes
+How does the Engine decide which fields to re-generate on subsequent passes?
+- Re-extract fields only if the field's specification changes?
+- Should fuzzy fields always be re-tried if the instruction changes, while deterministic fields are only re-tried if the source changes?
+- How does the "Unified Review" look? Does the user see a side-by-side comparison of old vs. new data during a refinement pass?
 
----
-
-## 6. Procedural Rules
-- **Source Fidelity:** API data (ratings, IDs, coordinates) must come from the Google Places API script, never from LLM hallucination.
-- **Incremental Progress:** The agent uses a status script to identify the "Next Task" in the pipeline.
-- **Accountability:** Every non-API researched field must include a `source` URL and `accessed_at` date.
+### D. Grounded Discovery for Abstract Domains
+Discovery must be grounded in a "Source of Truth" to avoid LLM hallucinations. The design challenge is how to implement this for abstract topics (e.g., "Kubernetes Books") where a single source isn't as obvious as Google Maps.
+- **Source Selection:** How does the Engine guide the user to a grounded index (e.g., Google Books API, GitHub, arXiv)? 
+- **Query Translation:** How does the Engine translate a fuzzy user intent ("General Kubernetes books") into a precise search query for that source (`intitle:Kubernetes`)?
+- **Filtering vs. Generation:** The Engine must strictly **filter** results returned by the source rather than **generating** new ones from the LLM's internal weights.
