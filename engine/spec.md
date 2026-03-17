@@ -7,57 +7,57 @@ This document defines the "Engine" architecture for a goal-oriented, schema-driv
 ## 1. Core Concepts
 
 ### A. Goal-Oriented & Schema-Driven
-The target data structure is the primary "Goal" of the system. The user defines what the final data should look like (`target_schema`), and the Engine's purpose is to populate this schema.
+The target data structure is the primary "Goal" of the system. The user provides a declarative specification of what the final data should look like (`schema`), and the Engine's purpose is to satisfy this schema.
 
 ### C. Field Specification Spectrum
-"As efficient as possible, as accurate as necessary." Field extraction is defined on a spectrum:
-- **Deterministic:** Specific API calls or rules where accuracy is paramount.
-- **Fuzzy:** LLM-driven reasoning/instructions where the tool's flexibility is the most efficient choice.
+"As efficient as possible, as accurate as necessary." Every field in the schema is defined by three components, each with a deterministic (`_raw`) or semantic (`_llm`) variant:
 
-### D. Iterative Refinement & State Preservation
-Usage follows an exploratory loop. A user may start with "fuzzy" specifications to test the waters and then "narrow down" to deterministic rules as needed. The Engine must preserve previously extracted data during these refinement passes, allowing for incremental improvements without starting from scratch.
+| Component | Deterministic (`_raw`) | Semantic (`_llm`) |
+| :--- | :--- | :--- |
+| **Source** | `source_raw`: API call/query template. | `source_llm`: Human intent/description. |
+| **Extraction** | `extract_raw`: JSON/XPath mapping. | `extract_llm`: Human extraction rules. |
+| **Constraints** | `constraints_raw`: Logical/Rule expression. | `constraints_llm`: Human filtering criteria. |
+
+### D. State Preservation (Single Pass PoC)
+While future versions will use a primary key/ID for state preservation across multiple passes, the initial Proof of Concept focuses on a single-pass execution where discovery and enrichment happen in a unified flow.
 
 ### E. Unified Hybrid Interface
 The Engine's main value proposition is providing a single interface that blends traditional data tools (scripts, APIs) with AI capabilities, selecting the most efficient sub-tool for each specific field-extraction task.
 
 ### F. Variable Injection & Implicit Dependencies
-Fields can reference the values of other fields using the `$field_name` syntax. This allows for dynamic construction of `source_raw` URLs or `source_llm` instructions. 
+Fields can reference the values of other fields using the `$field_name` syntax. The Engine is responsible for **Implicit Dependency Mapping**: it scans the configuration for these variables to automatically determine the correct execution order. 
 
-The Engine is responsible for **Implicit Dependency Mapping**: it scans the configuration for these variables to automatically determine the correct execution order (the dependency graph), removing the need for an explicit `depends_on` field.
+Fields with **zero dependencies** are identified as "Root Fields," and their shared source is treated as the "Anchor Source" for initial discovery.
 
 ---
 
 ## 2. Input Configuration (`config.yaml`)
 
 The Engine is governed by a declarative configuration file:
-- **Target Schema:** The "What" (Goal).
-- **Discovery Intent:** The "Where" (Source + Goal-based criteria).
-- **Enrichment Strategy:** The "How" (Field-by-field instructions, ranging from API bindings to LLM directives).
+- **Schema:** The "What" (Goal), "Where" (Source), "How" (Extraction), and "Why" (Constraints).
 
 ---
 
 ## 3. Open Design Decisions
 
 ### A. Role of the LLM vs. Orchestrator
-Is the main program a "Traditional Orchestrator" that explicitly calls the LLM for fuzzy fields, or is it an "Agentic Loop" where the LLM drives the overall flow?
+- **The Orchestrator:** A traditional program that invokes the LLM as a capability.
+- **The LLM Role:** Interprets `_llm` specifications and "asks" the main program to execute specific tasks or use tools.
+- **Terminology:** Should this program be called an "Agent"?
 
 ### B. LLM Mapping for Deterministic APIs
-Even for deterministic API calls, should the LLM be used to "map" the raw API response to the schema? This would reduce the user's burden of studying API documentation and specifying exact JSON paths (e.g., "Extract the rating from this Google API response").
+Even for `_raw` sources, should the LLM be used to "map" raw API responses to the schema? This avoids the tedious manual configuration of `extract_raw` paths.
 
-### C. State Preservation Logic During Refinement Passes
-How does the Engine decide which fields to re-generate on subsequent passes?
-- Re-extract fields only if the field's specification changes?
-- Should fuzzy fields always be re-tried if the instruction changes, while deterministic fields are only re-tried if the source changes?
-- How does the "Unified Review" look? Does the user see a side-by-side comparison of old vs. new data during a refinement pass?
+### C. State Preservation Logic During Refinement
+How does the Engine decide which fields to re-generate on subsequent passes? (Reserved for future multi-pass implementation).
 
 ### D. Grounded Discovery for Abstract Domains
-Discovery must be grounded in a "Source of Truth" to avoid LLM hallucinations. The design challenge is how to implement this for abstract topics (e.g., "Kubernetes Books") where a single source isn't as obvious as Google Maps.
-- **Source Selection:** How does the Engine guide the user to a grounded index (e.g., Google Books API, GitHub, arXiv)? 
-- **Query Translation:** How does the Engine translate a fuzzy user intent ("General Kubernetes books") into a precise search query for that source (`intitle:Kubernetes`)?
-- **Filtering vs. Generation:** The Engine must strictly **filter** results returned by the source rather than **generating** new ones from the LLM's internal weights.
+Discovery must be grounded in a "Source of Truth" to avoid LLM hallucinations.
+- **Source Selection:** How does the Engine guide the user to a grounded index (e.g., Google Books API, GitHub) when a geographic source like Google Maps isn't applicable?
+- **Filtering vs. Generation:** The Engine must strictly filter results from the source rather than generating entities from the LLM's internal knowledge.
 
 ### E. Multiple Sources per Field
-While the Engine currently focuses on a primary source per field, future versions must handle data federation from multiple sources (e.g., getting a phone number from both Google Maps and an Official Website).
+Future versions must handle data federation from multiple sources (e.g., getting a phone number from both Google Maps and an Official Website).
 - **Conflicting Data:** How does the Engine resolve differences? (e.g., a "Confidence Scorer" or "Weighted Priority").
 - **Unified Extraction:** Can the Engine be instructed to "Look at Source A, if not found, look at Source B"?
 
@@ -67,7 +67,7 @@ While the Engine currently focuses on a primary source per field, future version
 
 ### A. Technology Stack
 - **Language:** Python 3.10+
-- **LLM SDK:** [Google GenAI SDK for Python](https://pypi.org/project/google-genai/) ([GitHub](https://github.com/googleapis/python-genai), [Docs](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/sdks/overview))
+- **LLM SDK:** [Google GenAI SDK for Python](https://pypi.org/project/google-genai/)
 - **Orchestration:** Custom Python script using `Pydantic` for schema validation and `PyYAML` for configuration management.
 
 ### B. LLM Backend
@@ -79,17 +79,23 @@ While the Engine currently focuses on a primary source per field, future version
 
 ## 5. Setup Requirements
 
-### A. Gemini API Key
-1.  Generate an API Key at [Google AI Studio (API Keys)](https://aistudio.google.com/app/apikey).
-2.  Store the key in a local environment file at `engine/.env`:
+### A. Gemini API & Google Cloud Setup
+1.  **Generate an API Key:** Go to [Google AI Studio (API Keys)](https://aistudio.google.com/app/apikey).
+2.  **Enable Paid Tier (Tier 1):** 
+    - Click **"Set up billing"** for your project.
+    - Link a Google Cloud Billing account (reopen an existing one or create a new "Personal Billing Account").
+    - Ensure your project reflects **"Paid Tier"** or **"Tier 1"** in AI Studio to avoid strict rate limits (up to 2,000 RPM).
+3.  **Project ID:** If using multiple projects, ensure your API key belongs to the one linked to your billing account.
+4.  **Store the key:** Save in `engine/.env`:
     ```env
     GEMINI_API_KEY=your_api_key_here
+    GOOGLE_MAPS_API_KEY=your_maps_key_here
     ```
 
 ### B. Python Environment
-1.  Create a virtual environment: `python3 -m venv engine/.venv`
-2.  Activate and install dependencies:
+1.  **Create a virtual environment:** `python3 -m venv engine/.venv`
+2.  **Activate and install dependencies:**
     ```bash
     source engine/.venv/bin/activate
-    pip install google-genai PyYAML pydantic httpx python-dotenv
+    pip install google-genai PyYAML pydantic httpx python-dotenv jsonpath-ng
     ```

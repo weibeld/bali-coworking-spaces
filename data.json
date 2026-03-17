@@ -1,212 +1,309 @@
 [
   {
-    "name": "BWork Canggu",
-    "area": "Canggu",
-    "website": "https://bwork.id",
-    "pricing_page": "https://bwork.id/membership/canggu/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
-    "google_maps_rating": { "value": 4.3, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 316, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=12481520900396072691&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJ6fBvIpg50i0R8764BCFFN60",
-    "google_maps_latitude": -8.6540192,
-    "google_maps_longitude": 115.13524659999999,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJkSr5McdF0i0R6VWh42brx1E",
+    "name": "GoWork Park23 - Office and Coworking Space",
+    "location": {
+      "latitude": -8.7370196,
+      "longitude": 115.17564410000001
+    },
+    "rating": 4.7,
+    "rating_count": 194,
+    "website_url": "https://go-work.com/",
+    "google_maps_url": "https://maps.google.com/?cid=5892937464575776233&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 100,
+    "pricing_page": "https://go-work.com/park23-bali",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "BWork Uluwatu",
-    "area": "Uluwatu",
-    "website": "https://bwork.id",
-    "pricing_page": "https://bwork.id/membership/uluwatu/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://bwork.id", "accessed_at": "2026-03-13" },
-    "google_maps_rating": { "value": 4.9, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 34, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=17800075268139145015&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJlZBSYgBb0i0RN1emxCWSBvc",
-    "google_maps_latitude": -8.823880599999999,
-    "google_maps_longitude": 115.1222977,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJXbuyVARE0i0RrcDPZXtohsY",
+    "name": "TJ's Coffee & Co-Working",
+    "location": {
+      "latitude": -8.7410549,
+      "longitude": 115.1803324
+    },
+    "rating": 4.3,
+    "rating_count": 141,
+    "website_url": null,
+    "google_maps_url": "https://maps.google.com/?cid=14305236145587339437&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 85,
+    "pricing_page": "https://tjscoffee.com/memberships/",
+    "access_times": null
   },
   {
-    "name": "Tropical Nomad",
-    "area": "Canggu",
-    "website": "https://tropicalnomad.id",
-    "pricing_page": "https://tropicalnomad.id/pricing",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://tropicalnomad.id/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.4, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 352, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=1600082166356726553&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJvf4Cf7pF0i0RGVMhsUCiNBY",
-    "google_maps_latitude": -8.6526692,
-    "google_maps_longitude": 115.13802729999999,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJveybNaBH0i0RfzGH0e7VTq0",
+    "name": "Warna Co-working Space Bali",
+    "location": {
+      "latitude": -8.725165900000002,
+      "longitude": 115.1721257
+    },
+    "rating": 4.8,
+    "rating_count": 40,
+    "website_url": "https://www.warnacoworkingbali.com/",
+    "google_maps_url": "https://maps.google.com/?cid=12488154038439195007&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://www.warnacoworkingbali.com/packages",
+    "access_times": {
+      "members": "00:00-00:00",
+      "general_public": {
+        "monday_to_friday": "08:00-20:00",
+        "saturday": "09:00-17:00",
+        "sunday": "Closed"
+      }
+    }
   },
   {
-    "name": "BukitHub",
-    "area": "Uluwatu",
-    "website": "https://bukithub.com",
-    "pricing_page": "https://www.bukithub.com/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://www.bukithub.com/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 100, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=8899269747601141109&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJ6b-YySdb0i0RdW0lYq-OgHs",
-    "google_maps_latitude": -8.8198989,
-    "google_maps_longitude": 115.1611087,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJlRayeSBb0i0RYoZ2H5iiYyE",
+    "name": "Monday Co-Working",
+    "location": {
+      "latitude": -8.824499099999999,
+      "longitude": 115.1468479
+    },
+    "rating": 4.7,
+    "rating_count": 268,
+    "website_url": "http://mondaybali.com/",
+    "google_maps_url": "https://maps.google.com/?cid=2405945400192566882&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 100,
+    "pricing_page": "http://mondaybali.com/membership/",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "Livit Hub",
-    "area": "Sanur",
-    "website": "https://liv.it/livit-hub-coworking-bali/",
-    "pricing_page": "https://liv.it/livit-hub-coworking-bali/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://liv.it/livit-hub-coworking-bali/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 299, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=11190308065940979260&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJdaobacpB0i0RPL6ZreX1S5s",
-    "google_maps_latitude": -8.6906681,
-    "google_maps_longitude": 115.26138329999999,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJWUntfpdF0i0RJMGoPP6qZck",
+    "name": "Park23 Creative Hub",
+    "location": {
+      "latitude": -8.737140499999999,
+      "longitude": 115.17570560000001
+    },
+    "rating": 4.3,
+    "rating_count": 190,
+    "website_url": "https://park23.id/",
+    "google_maps_url": "https://maps.google.com/?cid=14512193383187398948&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 95,
+    "pricing_page": "https://park23.id/creative-hub/",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "Outpost Ubud Nyuh Kuning",
-    "area": "Ubud",
-    "website": "https://destinationoutpost.co/location/ubud/",
-    "pricing_page": "https://destinationoutpost.co/cowork-in-ubud/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://destinationoutpost.co/cowork-in-ubud/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.7, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 311, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=7305650197426571912&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJJQhT6KA90i0RiIrfxiXiYmU",
-    "google_maps_latitude": -8.5276721,
-    "google_maps_longitude": 115.2556328,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJCd9etMVH0i0RNkfYsSkhmZg",
+    "name": "Ducat Space - cafe, offices, co-working, meeting rooms",
+    "location": {
+      "latitude": -8.6660138,
+      "longitude": 115.14457150000001
+    },
+    "rating": 4.8,
+    "rating_count": 102,
+    "website_url": "http://ducatspace.com/",
+    "google_maps_url": "https://maps.google.com/?cid=10995856428162893622&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 95,
+    "pricing_page": "http://ducatspace.com/pricing",
+    "access_times": [
+      {
+        "member_type": "Office Residents",
+        "hours": "00:00-00:00"
+      },
+      {
+        "member_type": "Fixed Desk Members",
+        "hours": "00:00-00:00"
+      },
+      {
+        "member_type": "Hot Desk / Daily Coworking",
+        "hours": "09:00-21:00"
+      },
+      {
+        "member_type": "Meeting Rooms",
+        "hours": "09:00-21:00"
+      },
+      {
+        "member_type": "Cafe",
+        "hours": "08:00-20:00"
+      }
+    ]
   },
   {
-    "name": "Outpost Ubud Penestanan",
-    "area": "Ubud",
-    "website": "https://destinationoutpost.co/location/ubud-penestanan/",
-    "pricing_page": "https://destinationoutpost.co/cowork-in-ubud-penestanan/",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://destinationoutpost.co/cowork-in-ubud-penestanan/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.6, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 307, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=12990142167726034090&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJD6nZrCM90i0RqgwiEXpBRrQ",
-    "google_maps_latitude": -8.5064923,
-    "google_maps_longitude": 115.25178649999998,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJOy4VgxU50i0R8mawVCoFiRw",
+    "name": "PUCO Rooftop Coworking space & Eatery",
+    "location": {
+      "latitude": -8.638991899999999,
+      "longitude": 115.15127280000002
+    },
+    "rating": 4.9,
+    "rating_count": 565,
+    "website_url": "http://pucorooftop.com/",
+    "google_maps_url": "https://maps.google.com/?cid=2056180384238954226&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 92,
+    "pricing_page": "http://pucorooftop.com/membership/",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "Biliq Seminyak",
-    "area": "Seminyak",
-    "website": "https://www.biliqbali.com/coworkingspaceseminyak",
-    "pricing_page": "https://www.biliqbali.com/coworkingspaceseminyak",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://www.biliqbali.com/coworkingspaceseminyak", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 281, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=5972568731602609485&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJyzsusSdH0i0RTWXHC57T4lI",
-    "google_maps_latitude": -8.6914151,
-    "google_maps_longitude": 115.17520010000001,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJyb9HV2NH0i0RiKLk5M2Vqeo",
+    "name": "Work Hub Coworking Space",
+    "location": {
+      "latitude": -8.6835954,
+      "longitude": 115.16756710000001
+    },
+    "rating": 5,
+    "rating_count": 175,
+    "website_url": "https://workhub.co.id/",
+    "google_maps_url": "https://maps.google.com/?cid=16909210987480261256&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://workhub.co.id/pricing/",
+    "access_times": {
+      "private_office_members": "00:00-00:00",
+      "dedicated_desk_members": "00:00-00:00",
+      "hot_desk_members": {
+        "monday_friday": "08:00-20:00",
+        "saturday": "08:00-16:00",
+        "sunday": "Closed"
+      }
+    }
   },
   {
-    "name": "Biliq Sunset",
-    "area": "Kuta",
-    "website": "https://www.biliqbali.com/coworkingspacesunset",
-    "pricing_page": "https://www.biliqbali.com/coworkingspaceseminyak",
-    "access": { "start": "00:00", "end": "00:00", "source": "https://www.biliqbali.com/coworkingspacesunset", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 44, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=12930261270773450647&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJBf6rrkNH0i0Rl0dxSR6EcbM",
-    "google_maps_latitude": -8.714952300000002,
-    "google_maps_longitude": 115.186353,
-    "notes": null,
-    "visited": false
+    "place_id": "ChIJw04uvyVF0i0R_KGwcdqPdnw",
+    "name": "The space coworking",
+    "location": {
+      "latitude": -8.81223,
+      "longitude": 115.11322670000001
+    },
+    "rating": 4.8,
+    "rating_count": 51,
+    "website_url": "http://www.thespacebali.org/",
+    "google_maps_url": "https://maps.google.com/?cid=8968513876327965180&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "http://www.thespacebali.org/coworking",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "TRIBAL Coworking Bali",
-    "area": "Canggu",
-    "website": "https://tribalbali.com",
-    "pricing_page": "N/A",
-    "access": { "start": "08:00", "end": "22:00", "source": "In-person visit", "accessed_at": "2026-03-15" },
-    "google_maps_rating": { "value": 4.6, "accessed_at": "2026-03-15" },
-    "google_maps_rating_count": { "value": 628, "accessed_at": "2026-03-15" },
-    "google_maps_uri": "https://maps.google.com/?cid=9760897728039595040&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJH4qy2jI50i0RIKy3qMSsdYc",
-    "google_maps_latitude": -8.6487351,
-    "google_maps_longitude": 115.12475049999998,
-    "notes": "Hostel with coworking space that can also be used by the public: day pass for 100k, or free use with minimum spend in cafe of 100k for 3 hours and 200k for 6 hours. Visited on 15 March 2026.",
-    "visited": true
+    "place_id": "ChIJP_Gxg2VD0i0RdAmaBD2OQ4k",
+    "name": "Hub Bali Coworking Nusa Dua",
+    "location": {
+      "latitude": -8.7856022,
+      "longitude": 115.20033970000001
+    },
+    "rating": 4.6,
+    "rating_count": 85,
+    "website_url": "http://www.hubbali.co/",
+    "google_maps_url": "https://maps.google.com/?cid=9890905599357094260&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "http://www.hubbali.co/membership/",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "ZIN Cafe Canggu",
-    "area": "Canggu",
-    "website": "https://zin.world/zin-cafe/",
-    "pricing_page": "https://zin.world/zin-cafe/",
-    "access": { "start": "06:30", "end": "00:00", "source": "https://zin.world/zin-cafe/", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 2743, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=6796961442581721706&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJ1a70wvFH0i0RajIckWuoU14",
-    "google_maps_latitude": -8.659965399999999,
-    "google_maps_longitude": 115.13352569999999,
-    "notes": "No fee for the coworking space itself, but a minimum spend of 200,000 IDR in the cafe is required for use.",
-    "visited": false
+    "place_id": "ChIJ38knabpH0i0RXvdepV3-1OU",
+    "name": "G88 Coworking Space",
+    "location": {
+      "latitude": -8.6627186,
+      "longitude": 115.16712629999999
+    },
+    "rating": 4.3,
+    "rating_count": 279,
+    "website_url": null,
+    "google_maps_url": "https://maps.google.com/?cid=16561141407908034398&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://g88.com.vn/coworking-space/",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "TJ's Coffee and Co-Working",
-    "area": "Kuta",
-    "website": "https://www.instagram.com/tjscoffeeandcoworking/",
-    "pricing_page": "N/A",
-    "access": { "start": "07:00", "end": "21:00", "source": "In-person visit", "accessed_at": "2026-03-13" },
-    "google_maps_rating": { "value": 4.3, "accessed_at": "2026-03-14" },
-    "google_maps_rating_count": { "value": 141, "accessed_at": "2026-03-14" },
-    "google_maps_uri": "https://maps.google.com/?cid=14305236145587339437&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJXbuyVARE0i0RrcDPZXtohsY",
-    "google_maps_latitude": -8.7410549,
-    "google_maps_longitude": 115.1803324,
-    "notes": "Coworking space attached to a cafe. Rates: 75,000 IDR for 4 hours, 140,000 IDR for 8 hours. Visited on 13 March 2026.",
-    "visited": true
+    "place_id": "ChIJ87XtNrFH0i0R6gyoslpgveE",
+    "name": "Klik Hub",
+    "location": {
+      "latitude": -8.6834809,
+      "longitude": 115.1884317
+    },
+    "rating": 5,
+    "rating_count": 40,
+    "website_url": "https://klikhub.space/",
+    "google_maps_url": "https://maps.google.com/?cid=16266263371792780522&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://klikhub.space/membership",
+    "access_times": "00:00-00:00"
   },
   {
-    "name": "GoWork Park 23",
-    "area": "Kuta",
-    "website": "https://go-work.com/locations/bali/park-23",
-    "pricing_page": "https://go-work.com/solutions/coworking-space",
-    "access": { "start": "09:00", "end": "18:00", "source": "https://go-work.com/locations/bali/park-23", "accessed_at": "2026-03-14" },
-    "google_maps_rating": { "value": 4.7, "accessed_at": "2026-03-15" },
-    "google_maps_rating_count": { "value": 194, "accessed_at": "2026-03-15" },
-    "google_maps_uri": "https://maps.google.com/?cid=5892937464575776233&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJkSr5McdF0i0R6VWh42brx1E",
-    "google_maps_latitude": -8.7370196,
-    "google_maps_longitude": 115.17564410000001,
-    "notes": "Access is only Monday to Friday.",
-    "visited": false
+    "place_id": "ChIJA3nOrHFE0i0R4FVEZhUasm8",
+    "name": "Regus - Bali, Benoa Square",
+    "location": {
+      "latitude": -8.7614655,
+      "longitude": 115.17928549999999
+    },
+    "rating": 3.4,
+    "rating_count": 52,
+    "website_url": "https://www.regus.com/id-id/indonesia/bali/benoa-square-3466?utm_source=google_uberall&utm_medium=places&utm_campaign=uberall&utm_content=uberall",
+    "google_maps_url": "https://maps.google.com/?cid=8048524163276887520&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 100,
+    "pricing_page": "https://www.regus.com/id-id/indonesia/bali/benoa-square-3466",
+    "access_times": {
+      "Monday": "00:00-00:00",
+      "Tuesday": "00:00-00:00",
+      "Wednesday": "00:00-00:00",
+      "Thursday": "00:00-00:00",
+      "Friday": "00:00-00:00",
+      "Saturday": "00:00-00:00",
+      "Sunday": "00:00-00:00"
+    }
   },
   {
-    "name": "Warna Co-Working",
-    "area": "Kuta",
-    "website": "https://warnacoworkingbali.com/",
-    "pricing_page": "https://warnacoworkingbali.com/plans/#coworking-membership",
-    "access": { "start": "09:00", "end": "20:00", "source": "https://warnacoworkingbali.com/", "accessed_at": "2026-03-15" },
-    "google_maps_rating": { "value": 4.8, "accessed_at": "2026-03-15" },
-    "google_maps_rating_count": { "value": 40, "accessed_at": "2026-03-15" },
-    "google_maps_uri": "https://maps.google.com/?cid=12488154038439195007&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
-    "google_maps_place_id": "ChIJveybNaBH0i0RfzGH0e7VTq0",
-    "google_maps_latitude": -8.7251659000000021,
-    "google_maps_longitude": 115.1721257,
-    "notes": "Sunday hours: 09:00--17:00.",
-    "visited": true
+    "place_id": "ChIJ6fBvIpg50i0R8764BCFFN60",
+    "name": "B Work Bali",
+    "location": {
+      "latitude": -8.6540192,
+      "longitude": 115.13524659999999
+    },
+    "rating": 4.3,
+    "rating_count": 316,
+    "website_url": "https://bwork.id/",
+    "google_maps_url": "https://maps.google.com/?cid=12481520900396072691&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 99,
+    "pricing_page": "https://bwork.id/membership/",
+    "access_times": "00:00-00:00"
+  },
+  {
+    "place_id": "ChIJyzsusSdH0i0RTWXHC57T4lI",
+    "name": "Biliq Seminyak Coworking Space and Meeting Venue",
+    "location": {
+      "latitude": -8.6914151,
+      "longitude": 115.17520010000001
+    },
+    "rating": 4.8,
+    "rating_count": 281,
+    "website_url": "http://www.biliqbali.com/",
+    "google_maps_url": "https://maps.google.com/?cid=5972568731602609485&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://www.biliqbali.com/seminyak/",
+    "access_times": "00:00-00:00"
+  },
+  {
+    "place_id": "ChIJw61cI9pG0i0RDyuXkNL6Cn4",
+    "name": "Hub Bali Coworking Legian",
+    "location": {
+      "latitude": -8.6989906,
+      "longitude": 115.17503989999999
+    },
+    "rating": 4.4,
+    "rating_count": 143,
+    "website_url": "https://hubbali.co/",
+    "google_maps_url": "https://maps.google.com/?cid=9082347380821928719&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://hubbali.co/coworking/",
+    "access_times": "00:00-00:00"
+  },
+  {
+    "place_id": "ChIJYUDx6XpE0i0Rp8HxEa_YqQk",
+    "name": "MARQUEE - Alamanda Bali",
+    "location": {
+      "latitude": -8.7656319,
+      "longitude": 115.17864910000002
+    },
+    "rating": 4.7,
+    "rating_count": 210,
+    "website_url": "https://marqueeoffices.com/en/alamanda-bali",
+    "google_maps_url": "https://maps.google.com/?cid=696325863837385127&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+    "coworking_confidence": 98,
+    "pricing_page": "https://marqueeoffices.com/en/rates",
+    "access_times": {
+      "monday": "00:00-00:00",
+      "tuesday": "00:00-00:00",
+      "wednesday": "00:00-00:00",
+      "thursday": "00:00-00:00",
+      "friday": "00:00-00:00",
+      "saturday": "00:00-00:00",
+      "sunday": "00:00-00:00"
+    }
   }
 ]

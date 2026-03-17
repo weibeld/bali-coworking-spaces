@@ -2,57 +2,58 @@
 
 # ==============================================================================
 # UNIFIED TARGET SCHEMA
-# Every field here is a "Task" for the Engine to complete.
 # ==============================================================================
 schema:
-  # --- THE ANCHOR (Discovery + Unique ID) ---
+  # --- ROOT FIELDS (Zero dependencies, defining the Anchor Source) ---
   place_id:
-    id: true
-    source_llm: "Google Maps"
-    # The LLM will use this intent to construct the actual API call
-    source_intent: "Find all 'coworking spaces' within 40km of Bali Airport (DPS)."
+    source_llm: "Coworking spaces on Google Maps"
     extract_raw: "$.places[*].id"
 
-  # --- THE QUALIFIER (Semantic Reasoning via Confidence Scoring) ---
-  coworking_confidence:
-    source_llm: "Google Maps categories, user reviews, and the official website: $website_url"
-    extract_llm: >
-      Synthesise all available information (Google Maps labels, user review 
-      content mentioning work/WiFi/fees, and the official website content) 
-      to calculate a confidence score (0-100) representing the probability 
-      that this place provides a dedicated, explicitly marketed coworking 
-      service (e.g., memberships, day passes, dedicated quiet zones, or 
-      meeting rooms). 
-      
-      Differentiate clearly between 'laptop-friendly' venues (where work is 
-      a side effect) and true coworking environments (where work is the 
-      primary intended service).
-    constraints_raw: ">= 80"
-
-  # --- BASIC DATA (Deterministic Mapping) ---
   name:
-    source_raw: "Google Maps" # Inherited from the anchor's successful query
+    source_llm: "Coworking spaces on Google Maps"
     extract_raw: "$.displayName.text"
 
+  location:
+    source_llm: "Coworking spaces on Google Maps"
+    constraints_llm: "Within 40km of Bali Airport (DPS)."
+    extract_raw: "$.location"
+
+  rating:
+    source_llm: "Coworking spaces on Google Maps"
+    extract_raw: "$.rating"
+
   rating_count:
-    source_raw: "Google Maps"
+    source_llm: "Coworking spaces on Google Maps"
     extract_raw: "$.userRatingCount"
     constraints_raw: ">= 20"
 
   website_url:
-    source_raw: "Google Maps"
+    source_llm: "Coworking spaces on Google Maps"
     extract_raw: "$.websiteUri"
 
-  # --- ENRICHED DATA (Semantic Joins via Variable Injection) ---
+  google_maps_url:
+    source_llm: "Coworking spaces on Google Maps"
+    extract_raw: "$.googleMapsUri"
+
+  # --- THE QUALIFIER (Semantic Reasoning via Confidence Scoring) ---
+  coworking_confidence:
+    source_llm: "Google Maps categories and user reviews for $name (ID: $place_id)"
+    extract_llm: >
+      Evaluate if this is a dedicated coworking space. Differentiate 
+      clearly between 'laptop-friendly' venues and true coworking 
+      environments (memberships, day passes, quiet zones).
+      
+      Return a confidence score between 0 and 100.
+    constraints_raw: ">= 80"
+
+  # --- ENRICHED DATA (Semantic Joins) ---
   pricing_page:
-    # Dependency is implicit from the $website_url variable
-    source_llm: "Find the direct URL for pricing, membership, or day pass on the official website: $website_url"
+    source_llm: "Find the direct URL for pricing/membership for $name on its official website: $website_url"
     extract_llm: "Return the most relevant URL for pricing information."
 
   access_times:
-    # Dependency is implicit from the $website_url variable
-    source_llm: "Extract member-specific open and close hours from $website_url."
-    extract_llm: "Use 00:00-00:00 for 24/7 access. Distinguish between public cafe and member-only hours."
+    source_llm: "Extract member-specific open and close hours for $name from $website_url."
+    extract_llm: "Use 00:00-00:00 for 24/7 access."
     properties:
       start: { type: "string" }
       end: { type: "string" }
