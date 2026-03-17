@@ -20,6 +20,11 @@ Usage follows an exploratory loop. A user may start with "fuzzy" specifications 
 ### E. Unified Hybrid Interface
 The Engine's main value proposition is providing a single interface that blends traditional data tools (scripts, APIs) with AI capabilities, selecting the most efficient sub-tool for each specific field-extraction task.
 
+### F. Variable Injection & Implicit Dependencies
+Fields can reference the values of other fields using the `$field_name` syntax. This allows for dynamic construction of `source_raw` URLs or `source_llm` instructions. 
+
+The Engine is responsible for **Implicit Dependency Mapping**: it scans the configuration for these variables to automatically determine the correct execution order (the dependency graph), removing the need for an explicit `depends_on` field.
+
 ---
 
 ## 2. Input Configuration (`config.yaml`)
@@ -50,6 +55,11 @@ Discovery must be grounded in a "Source of Truth" to avoid LLM hallucinations. T
 - **Source Selection:** How does the Engine guide the user to a grounded index (e.g., Google Books API, GitHub, arXiv)? 
 - **Query Translation:** How does the Engine translate a fuzzy user intent ("General Kubernetes books") into a precise search query for that source (`intitle:Kubernetes`)?
 - **Filtering vs. Generation:** The Engine must strictly **filter** results returned by the source rather than **generating** new ones from the LLM's internal weights.
+
+### E. Multiple Sources per Field
+While the Engine currently focuses on a primary source per field, future versions must handle data federation from multiple sources (e.g., getting a phone number from both Google Maps and an Official Website).
+- **Conflicting Data:** How does the Engine resolve differences? (e.g., a "Confidence Scorer" or "Weighted Priority").
+- **Unified Extraction:** Can the Engine be instructed to "Look at Source A, if not found, look at Source B"?
 
 ---
 
