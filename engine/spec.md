@@ -99,3 +99,24 @@ Future versions must handle data federation from multiple sources (e.g., getting
     source engine/.venv/bin/activate
     pip install google-genai PyYAML pydantic httpx python-dotenv jsonpath-ng
     ```
+
+---
+
+## 6. Competitive Analysis: Firecrawl Agent
+
+The **Firecrawl Agent** ([Website](https://www.firecrawl.dev/app/agent) | [Docs](https://docs.firecrawl.dev/features/agent) | [GitHub](https://github.com/mendableai/firecrawl)) is an autonomous web research tool designed to handle complex, multi-step extraction tasks. It allows users to start with a natural language prompt, and the agent autonomously navigates the web using its internal **FIRE-1** web action agent to identify relevant URLs and extract structured data (JSON/CSV) based on an intent-driven schema.
+
+### Key Capabilities of Firecrawl Agent:
+- **Autonomous Source Discovery:** It can find its own sources and navigate deep into site structures, including "hard-to-reach" places requiring interaction (clicks, scrolls).
+- **Parallel Research:** It supports batch processing of hundreds of queries simultaneously for high-throughput extraction.
+- **Model Tiers:** Users can choose between **Spark 1 Mini** (optimized for cost/efficiency) and **Spark 1 Pro** (optimized for complex reasoning and accuracy).
+- **LLM-Ready Output:** Deliver clean Markdown or structured data specifically formatted for immediate consumption by AI agents.
+
+### How Datapilot Differs (and Improves):
+
+While Firecrawl is an industry leader for broad, autonomous research, **Datapilot** is designed for high-precision scenarios where the user needs explicit, deterministic control over the "Source of Truth."
+
+1.  **Pinned Data Sources vs. Opaque Discovery:** Firecrawl autonomously finds URLs, which can lead to "Agent Drift" or data from untrusted sources. Datapilot allows the user to explicitly pin logical sources (e.g., "Google Places search" vs "Official Venue Website"), ensuring the data provenance is deterministic and verifiable.
+2.  **Grounded API Integration:** Datapilot supports grounding the LLM in real-world API documentation. Instead of relying on general LLM knowledge to "scrape" a page, the Datapilot orchestrator fetches technical docs so the LLM can construct precise, valid API calls (e.g., using specific `locationBias` rules in Google Maps).
+3.  **Schema Generation Model:** While both tools use schemas, Firecrawl typically relies on an LLM to "propose" or "map" a schema based on general intent. In contrast, Datapilot uses an **Orchestrator-driven Compilation** approach. The formal JSON Schema is inferred directly from the user's structured declarative configuration at startup, ensuring the engine adheres strictly to the user's defined goals rather than the LLM's probabilistic interpretation.
+4.  **Fine-Grained Transparency:** Datapilot acts as a "White Box" engine. Every data point is tied to a specific field intent and a specific grounded source, providing a clear audit trail that is often missing in purely autonomous "Black Box" research agents.
