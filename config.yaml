@@ -1,60 +1,127 @@
-# Datapilot Engine: Unified Schema Specification (Bali Coworking)
+# Datapilot Engine: Bali Coworking Task
 
-# ==============================================================================
-# UNIFIED TARGET SCHEMA
-# ==============================================================================
-schema:
-  # --- ROOT FIELDS (Zero dependencies, defining the Anchor Source) ---
-  place_id:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.places[*].id"
+goal: >
+  The goal is to list all currently operating coworking spaces in Bali and extract a 
+  basic set of data that makes it easy to do further research. For the main data 
+  source Google Maps is used. A focus is to only extract places that are actually 
+  operating at the time of execution (i.e. no outdated data) and that provide 
+  dedicated coworking services (i.e. no normal work-friendly cafés).
 
-  name:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.displayName.text"
+sources:
+  google_maps_text_search: >
+    The Google Places Text Search (New) API. This includes basic information 
+    about a place that is returned when searching for a place by text query 
+    on Google Maps. Use $GOOGLE_MAPS_API_KEY for authentication.
+    Documentation: https://developers.google.com/maps/documentation/places/web-service/text-search, 
+    https://developers.google.com/maps/documentation/places/web-service/choose-fields, 
+    https://developers.google.com/maps/documentation/places/web-service/data-fields, 
+    https://developers.google.com/maps/documentation/places/web-service/place-types
+
+  google_maps_place_details: >
+    The Google Places Place Details (New) API. This is more detailed information 
+    about a place that one can query with the place's Place ID $google_place_id. 
+    Use $GOOGLE_MAPS_API_KEY for authentication.
+    Documentation: https://developers.google.com/maps/documentation/places/web-service/place-details, 
+    https://developers.google.com/maps/documentation/places/web-service/place-id, 
+    https://developers.google.com/maps/documentation/places/web-service/choose-fields, 
+    https://developers.google.com/maps/documentation/places/web-service/data-fields, 
+    https://developers.google.com/maps/documentation/places/web-service/place-types
+
+  website: >
+    The official website $website of the coworking space. Used for extracting 
+    official first-hand data like official name, pricing, and member-specific 
+    access hours.
+
+# Use "$VAR_NAME" to reference an environment variable or .env entry. If the
+# value doesn't start with $, it is taken as the actual value.
+auth:
+  $GOOGLE_MAPS_API_KEY: "$GOOGLE_MAPS_API_KEY"
+
+fields:
+  google_place_id:
+    type: string
+    source: google_maps_text_search
+    extract: "The unique Google Place ID."
 
   location:
-    source_llm: "Coworking spaces on Google Maps"
-    constraints_llm: "Within 40km of Bali Airport (DPS)."
-    extract_raw: "$.location"
-
-  rating:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.rating"
-
-  rating_count:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.userRatingCount"
-    constraints_raw: ">= 20"
-
-  website_url:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.websiteUri"
-
-  google_maps_url:
-    source_llm: "Coworking spaces on Google Maps"
-    extract_raw: "$.googleMapsUri"
-
-  # --- THE QUALIFIER (Semantic Reasoning via Confidence Scoring) ---
-  coworking_confidence:
-    source_llm: "Google Maps categories and user reviews for $name (ID: $place_id)"
-    extract_llm: >
-      Evaluate if this is a dedicated coworking space. Differentiate 
-      clearly between 'laptop-friendly' venues and true coworking 
-      environments (memberships, day passes, quiet zones).
-      
-      Return a confidence score between 0 and 100.
-    constraints_raw: ">= 80"
-
-  # --- ENRICHED DATA (Semantic Joins) ---
-  pricing_page:
-    source_llm: "Find the direct URL for pricing/membership for $name on its official website: $website_url"
-    extract_llm: "Return the most relevant URL for pricing information."
-
-  access_times:
-    source_llm: "Extract member-specific open and close hours for $name from $website_url."
-    extract_llm: "Use 00:00-00:00 for 24/7 access."
+    type: object
+    source: google_maps_text_search
     properties:
-      start: { type: "string" }
-      end: { type: "string" }
-      source: { type: "string" }
+      latitude: { type: number, extract: "The latitude coordinate." }
+      longitude: { type: number, extract: "The longitude coordinate." }
+    constraints: "Is on Bali island."
+
+  google_place_rating:
+    type: number
+    source: google_maps_text_search
+    extract: "Average rating (0-5)."
+
+  google_place_rating_count:
+    type: integer
+    source: google_maps_text_search
+    extract: "Total number of reviews."
+    constraints: ">= 20"
+
+  google_place_uri:
+    type: string
+    source: google_maps_text_search
+    extract: "The Google Maps link for the venue."
+
+  name:
+    type: string
+    source: google_maps_text_search
+    extract: "The name of the venue."
+
+  website:
+    type: string
+    source: google_maps_text_search
+    extract: "The official website URI."
+
+  coworking_confidence:
+    type: integer
+    source: google_maps_place_details
+    extract: >
+      An index between 0 and 100 indicating the confidence that this is a 
+      coworking facility that provides a dedicated coworking service. 
+      This may include traditional coworking spaces, cafes or other 
+      facilities with an attached coworking area, or also coworking 
+      hostels or hotels that have a coworking area that is open to 
+      the public. However, this excludes normal cafes where people 
+      might also be able to work. The goal is to find all places that 
+      explicitly cater for people who show up there and work the whole 
+      day with a dedicated service.
+    constraints: ">= 80"
+
+  pricing_page:
+    type: string
+    source: website
+    extract: >
+      The URL of the page of the official website that contains the pricing 
+      information for this coworking space. To extract this, navigate the 
+      official website and look for sections that say "membership", "plans", 
+      "pricing" or similar things.
+
+  access_hours:
+    type: object
+    source: website
+    properties:
+      start:
+        type: string
+        extract: >
+          Access start time for members. This is specifically for holders of 
+          weekly, monthly passes, etc. not for daypass or hourly pass holders. 
+          List the general access times. Note variations or closures in $notes.
+      stop:
+        type: string
+        extract: >
+          Access end time for members. This is specifically for holders of 
+          weekly, monthly passes, etc. not for daypass or hourly pass holders. 
+          List the general access times. Note variations or closures in $notes.
+
+  notes:
+    type: string
+    source: null
+    extract: >
+      A field for information that doesn't fit elsewhere, such as specific 
+      weekend access variations or special conditions noted during extraction 
+      of other fields.

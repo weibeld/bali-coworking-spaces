@@ -8,7 +8,6 @@ import sys
 from typing import Any, Dict, List, Set, Optional
 from google import genai
 from dotenv import load_dotenv
-from jsonpath_ng import jsonpath, parse
 
 # Setup paths relative to this script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -31,6 +30,7 @@ class DatapilotEngine:
         self.maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
         
         self.client = genai.Client(api_key=self.gemini_key)
+        self.sources = self.config.get("sources", {})
         self.schema = self.config.get("schema", {})
         self.model_id = "gemini-flash-latest"
         self.interactive = interactive
@@ -61,128 +61,133 @@ class DatapilotEngine:
             visit(node)
         return ordered
 
-    def extract_raw_json(self, data: Any, path: str) -> Any:
-        """Uses JSONPath to extract data. Handles both absolute and relative paths."""
-        try:
-            # If path refers to the root list but we are in a single item, strip the prefix
-            if path.startswith("$.places[*]"):
-                path = "$" + path[len("$.places[*]"):]
-            
-            jsonpath_expr = parse(path)
-            matches = jsonpath_expr.find(data)
-            if not matches: return None
-            return [m.value for m in matches] if len(matches) > 1 else matches[0].value
-        except Exception as e:
-            print(f"   ⚠️ Extraction Error: {e}")
-            return None
+    async def fetch_docs(self, url: str) -> str:
+        """Fetches documentation content to ground the LLM."""
+        print(f"   🌐 Fetching Documentation: {url}...")
+        async with httpx.AsyncClient() as client:
+            try:
+                resp = await client.get(url, follow_redirects=True)
+                # Simple text extraction (strip HTML tags)
+                text = re.sub('<[^<]+?>', '', resp.text)
+                text = "\n".join([line.strip() for line in text.splitlines() if line.strip()])
+                return text[:15000] # Limit context size
+            except Exception as e:
+                print(f"   ⚠️ Could not fetch docs: {e}")
+                return "Documentation not available."
 
-    def synthesize_anchor_call(self) -> Dict[str, Any]:
-        """Ask LLM to compile the root source intent into an API call."""
-        anchor_source = self.schema[self.root_fields[0]].get("source_llm")
-        root_specs = [self.schema[f] for f in self.root_fields]
+    async def synthesize_anchor_call(self) -> Dict[str, Any]:
+        """Ask LLM to compile the root source intent into an API call using provided docs."""
+        first_field = self.root_fields[0]
+        source_id = self.schema[first_field].get("source_id")
+        source_config = self.sources.get(source_id, {})
+        source_desc = source_config.get("description", "Unknown Source")
+        docs_url = source_config.get("docs")
+        
+        docs_content = await self.fetch_docs(docs_url) if docs_url else "No documentation provided."
+        
+        root_specs = {f: self.schema[f] for f in self.root_fields}
 
         prompt = f"""
-        Construct a Google Places API (New) 'searchText' request for SOURCE: {anchor_source}.
-        ENDPOINT: https://places.googleapis.com/v1/places:searchText
-        METHOD: POST
+        TASK: Construct a functional API request for SOURCE: {source_desc}.
         
-        CRITICAL SCHEMA RULES (v1):
-        1. Use camelCase for all keys (e.g., 'textQuery', 'locationBias').
-        2. CIRCLES: Only supported in 'locationBias', NOT 'locationRestriction'.
-           Example: {{"textQuery": "...", "locationBias": {{"circle": {{"center": {{"latitude": -8.748, "longitude": 115.167}}, "radius": 40000.0}}}}}}
-        3. RECTANGLES: Supported in both 'locationBias' and 'locationRestriction'.
-        4. FieldMask (Header): "places.id,places.displayName,places.location,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri"
+        GROUNDING DOCUMENTATION:
+        {docs_content}
 
-        FIELDS TO SATISFY: {json.dumps(root_specs, indent=2)}
-        
-        RETURN JSON with keys: url, method, headers, body.
+        TARGET SCHEMA (Fields to satisfy in this request):
+        {json.dumps(root_specs, indent=2)}
+
+        INSTRUCTIONS:
+        1. Read the provided documentation carefully. 
+        2. Identify the correct modern endpoint URL, HTTP method, and JSON body/query schema.
+        3. Use 'YOUR_API_KEY' as a placeholder for any required authentication.
+        4. For Google Places (New), remember that circles are only supported in 'locationBias', not 'locationRestriction'.
+        5. Return ONLY a JSON object with keys: url, method, headers, body.
         """
+        
         if self.interactive:
-            print(f"\n[DEBUG] --- LLM REQUEST: SYNTHESIS ---")
-            print(prompt)
+            print(f"\n[DEBUG] --- LLM REQUEST: SYNTHESIS (Grounded) ---")
         
         response = self.client.models.generate_content(
             model=self.model_id,
             contents=prompt,
             config={'response_mime_type': 'application/json'}
         )
+        
         if self.interactive:
             print(f"\n[DEBUG] --- LLM RESPONSE: SYNTHESIS ---")
             print(response.text)
         
         return json.loads(response.text)
 
-    async def fetch_initial_data(self) -> List[Dict[str, Any]]:
-        """Synthesizes, executes, and maps the root source data."""
-        req = self.synthesize_anchor_call()
-        if self.interactive:
-            print(f"\n[DEBUG] --- API REQUEST: DATA FETCHING ---")
-            print(f"URL: {req['url']}")
-            print(f"Headers: {json.dumps(req['headers'], indent=2)}")
-            print(f"Body: {json.dumps(req['body'], indent=2)}")
+    async def extract_fields_from_raw(self, raw_data: Any, field_names: List[str]) -> Dict[str, Any]:
+        """Uses LLM to extract multiple fields from a raw chunk of data."""
+        specs = {f: self.schema[f] for f in field_names}
         
-        headers = req['headers']
-        headers["X-Goog-Api-Key"] = self.maps_key
-        headers = {k: str(v) for k, v in headers.items() if v is not None}
+        prompt = f"""
+        RAW DATA:
+        {json.dumps(raw_data, indent=2)}
 
-        async with httpx.AsyncClient() as client:
-            resp = await client.post(req['url'], json=req.get('body', {}), headers=headers)
-            if self.interactive:
-                print(f"\n[DEBUG] --- API RESPONSE: DATA FETCHING ---")
-                print(f"Status: {resp.status_code}")
-            if resp.status_code != 200:
-                print(f"Error Content: {resp.text}")
-                return []
-            raw_data = resp.json()
-        
-        places = raw_data.get("places", [])
-        print(f"\n   ✅ Received {len(places)} candidates from API.")
-        
-        results = []
-        for p in places:
-            row = {}
-            keep = True
-            for f in self.root_fields:
-                spec = self.schema[f]
-                val = self.extract_raw_json(p, spec.get("extract_raw", ""))
-                
-                if "constraints_raw" in spec:
-                    rule = spec["constraints_raw"]
-                    if ">=" in rule:
-                        try:
-                            threshold = int(rule.split(">=")[1].strip())
-                            if val is None or int(val) < threshold: keep = False
-                        except: pass
-                
-                row[f] = val
-            
-            if keep: 
-                results.append(row)
-                if self.interactive:
-                    print(f"      📍 Fetched: {row.get('name')} (Rating: {row.get('rating')})")
-        
-        print(f"   🎯 {len(results)} candidates satisfied initial constraints.")
-        return results
+        TARGET FIELDS & INTENT:
+        {json.dumps(specs, indent=2)}
 
-    def execute_join(self, field_name: str, row: Dict[str, Any]) -> Any:
-        """Executes LLM join for a dependent field."""
-        spec = self.schema[field_name]
-        source_text = spec.get("source_llm", "")
-        extract_instr = spec.get("extract_llm", "")
-        for k, v in row.items():
-            source_text = source_text.replace(f"${k}", str(v))
-            extract_instr = extract_instr.replace(f"${k}", str(v))
-
-        prompt = f"CONTEXT: {source_text}\n\nINSTRUCTION: {extract_instr}\n\nReturn JSON: {{ '{field_name}': ... }}"
-        if self.interactive:
-            print(f"\n   [DEBUG] --- LLM REQUEST: JOIN {field_name} ---")
-            print(prompt)
+        INSTRUCTION:
+        Extract the values for each field from the raw data based on the provided intent and constraints.
+        Return ONLY a JSON object where keys are the field names.
+        """
         
         response = self.client.models.generate_content(
             model=self.model_id,
             contents=prompt,
             config={'response_mime_type': 'application/json'}
         )
+        try:
+            return json.loads(response.text)
+        except:
+            return {}
+
+    async def execute_join(self, field_name: str, row: Dict[str, Any]) -> Any:
+        """Executes LLM join for a dependent field, optionally grounded in a source."""
+        spec = self.schema[field_name]
+        source_id = spec.get("source_id")
+        
+        # Determine the contextual intent/description
+        if source_id and source_id in self.sources:
+            source_config = self.sources[source_id]
+            source_desc = source_config.get("description", "")
+            docs_url = source_config.get("docs")
+            docs_content = await self.fetch_docs(docs_url) if docs_url else "Documentation not available."
+        else:
+            source_desc = spec.get("description", "")
+            docs_content = "No technical documentation provided."
+
+        # Resolve variables
+        for k, v in row.items():
+            source_desc = source_desc.replace(f"${k}", str(v))
+
+        extract_instr = spec.get("extract", "")
+        for k, v in row.items():
+            extract_instr = extract_instr.replace(f"${k}", str(v))
+
+        prompt = f"""
+        SOURCE CONTEXT: {source_desc}
+        
+        GROUNDING DOCUMENTATION:
+        {docs_content}
+
+        INSTRUCTION: {extract_instr}
+        
+        Return JSON: {{ '{field_name}': ... }}
+        """
+        
+        if self.interactive:
+            print(f"\n   [DEBUG] --- LLM REQUEST: JOIN {field_name} (Grounded) ---")
+        
+        response = self.client.models.generate_content(
+            model=self.model_id,
+            contents=prompt,
+            config={'response_mime_type': 'application/json'}
+        )
+        
         if self.interactive:
             print(f"\n   [DEBUG] --- LLM RESPONSE: JOIN {field_name} ---")
             print(response.text)
@@ -199,69 +204,130 @@ class DatapilotEngine:
             print("\n⚠️ No data found to display.")
             return
 
-        # Select columns to display
         cols = ["name", "rating", "rating_count", "coworking_confidence", "website_url"]
         widths = {c: len(c) + 2 for c in cols}
-        
-        # Calculate max widths
         for row in data:
             for c in cols:
-                val = str(row.get(c, ""))[:40] # Truncate long strings
+                val = str(row.get(c, ""))[:40]
                 widths[c] = max(widths[c], len(val) + 2)
 
-        # Print Header
         print("\n" + "┌" + "┬".join("─" * widths[c] for c in cols) + "┐")
         print("│" + "│".join(c.upper().center(widths[c]) for c in cols) + "│")
         print("├" + "┼".join("─" * widths[c] for c in cols) + "┤")
-
-        # Print Rows
         for row in data:
             line = "│"
             for c in cols:
                 val = str(row.get(c, ""))[:widths[c]-2]
                 line += val.ljust(widths[c]) + "│"
             print(line)
-
         print("└" + "┴".join("─" * widths[c] for c in cols) + "┘")
 
     async def execute(self, limit: int = 3):
-        print("\n🚀 STEP 1: INITIAL DATA FETCHING")
-        print("-" * 40)
-        rows = await self.fetch_initial_data()
+        # 1. ANCHORING
+        print("\n⚓ ANCHORING: Preparing initial data fetch...")
+        req = await self.synthesize_anchor_call()
         
-        print("\n🚀 STEP 2: EXECUTING JOINS")
-        print("-" * 40)
-        final_dataset = []
-        
-        for i, row in enumerate(rows[:limit]):
-            name = row.get('name', 'Unknown')
-            if self.interactive:
-                print(f"\n" + "="*80)
-                print(f"📦 [{i+1}/{len(rows[:limit])}] PROCESSING: {name}")
-                print("="*80)
-                print(f"   Current Data: {json.dumps(row, indent=2)}")
+        url = req.get('url')
+        method = req.get('method', 'GET').upper()
+        headers = req.get('headers', {})
+        body = req.get('body')
+
+        # Inject API keys
+        for k, v in headers.items():
+            if v == "YOUR_API_KEY": headers[k] = self.maps_key
+        if body:
+            body_str = json.dumps(body).replace("YOUR_API_KEY", self.maps_key)
+            body = json.loads(body_str)
+        url = url.replace("YOUR_API_KEY", self.maps_key)
+
+        # Fallback for Google Maps New API
+        if "google" in url and "X-Goog-Api-Key" not in headers:
+            headers["X-Goog-Api-Key"] = self.maps_key
+
+        headers = {k: str(v) for k, v in headers.items() if v is not None}
+
+        if self.interactive:
+            print(f"\n[DEBUG] --- API REQUEST: DATA FETCHING ---")
+            print(f"URL: {url}")
+            print(f"Headers: {json.dumps(headers, indent=2)}")
+            print(f"Body: {json.dumps(body, indent=2)}")
+
+        # 2. FETCHING
+        print("📡 FETCHING: Executing primary source request...")
+        async with httpx.AsyncClient() as client:
+            if method == "POST":
+                resp = await client.post(url, json=body, headers=headers)
             else:
-                print(f"📦 [{i+1}/{len(rows[:limit])}] Processing: {name}...")
+                resp = await client.get(url, params=body, headers=headers)
+                
+            if resp.status_code != 200:
+                print(f"❌ API Error: {resp.text}")
+                return
+            raw_data = resp.json()
+        
+        # Find the list of items
+        data_root = None
+        if isinstance(raw_data, list):
+            data_root = raw_data
+        elif isinstance(raw_data, dict):
+            for key in ['places', 'results', 'items', 'data']:
+                if key in raw_data and isinstance(raw_data[key], list):
+                    data_root = raw_data[key]
+                    break
+            if not data_root:
+                data_root = [raw_data]
+
+        print(f"✅ FOUND: {len(data_root)} potential candidates.")
+        
+        final_dataset = []
+        count = 0
+        
+        # 3. UNIFIED PROCESSING LOOP
+        for p in data_root:
+            if count >= limit: break
             
+            # Semantic Extraction for Root Fields
+            row = await self.extract_fields_from_raw(p, self.root_fields)
+            
+            # Check constraints for root fields
+            keep = True
+            for f in self.root_fields:
+                spec = self.schema[f]
+                val = row.get(f)
+                if "constraints" in spec:
+                    # Very simple constraint check for PoC
+                    # For complex constraints, we could use the LLM
+                    rule = str(spec["constraints"])
+                    if ">=" in rule:
+                        try:
+                            threshold = int(rule.split(">=")[1].strip())
+                            if val is None or int(val) < threshold: keep = False
+                        except: pass
+            
+            if not keep: continue
+            
+            count += 1
+            name = row.get('name', 'Unknown')
+            
+            print(f"\n" + "━"*80)
+            print(f"📦 [{count}/{limit}] {name}")
+            print("━"*80)
+            print(f"   [FETCHED DATA]: {json.dumps(row, indent=2)}")
+            
+            # Execute Joins
             for field in self.execution_order:
                 if field in self.root_fields: continue
-                
-                if self.interactive:
-                    print(f"   -> Executing Join: '{field}'...")
-                
-                val = self.execute_join(field, row)
+                if self.interactive: print(f"   -> Joining: '{field}'...")
+                val = await self.execute_join(field, row)
                 row[field] = val
-                
-                if self.interactive:
-                    print(f"      ✅ Result: {val}")
+                if self.interactive: print(f"      ✅ Result: {val}")
                 
                 spec = self.schema[field]
-                if "constraints_raw" in spec:
-                    rule = spec["constraints_raw"]
+                if "constraints" in spec:
+                    rule = str(spec["constraints"])
                     try:
                         if ">=" in rule and int(val) < int(rule.split(">=")[1]):
-                            if self.interactive:
-                                print(f"   ❌ Rejected: {field} value {val} failed {rule}")
+                            print(f"   ❌ REJECTED: {field} ({val}) failed {rule}")
                             row = None
                             break
                     except: pass
@@ -269,10 +335,9 @@ class DatapilotEngine:
             if row: 
                 final_dataset.append(row)
                 if self.interactive:
-                    print(f"\n✅ SUCCESS: Final Row for {name}:")
-                    print(json.dumps(row, indent=2))
+                    print(f"\n✅ COMPLETE: Final dataset for {name} updated.")
             
-            if self.interactive and i < len(rows[:limit]) - 1:
+            if self.interactive and count < limit:
                 input("\n[PAUSE] Press ENTER to continue to next candidate... ")
 
         print("\n" + "=" * 80)
@@ -281,7 +346,6 @@ class DatapilotEngine:
         
         self.print_table(final_dataset)
         
-        # Save to data.json for safety
         with open("../data.json", "w") as f:
             json.dump(final_dataset, f, indent=2)
         print(f"\n💾 Results saved to data.json")
